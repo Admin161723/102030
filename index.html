@@ -112,7 +112,7 @@
             background: url('IMG_20260622_214041_637.jpg') no-repeat center center / 100% 100%;
             display: none;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             z-index: 5;
             padding: 0;
@@ -131,7 +131,10 @@
 
         /* ===== نوار بالایی ===== */
         .top-bar {
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
             z-index: 6;
             width: 100%;
             padding: 18px 20px 0;
@@ -140,7 +143,7 @@
             align-items: flex-start;
         }
 
-        /* ===== دکمه تنظیمات (گوشه بالا راست) ===== */
+        /* ===== دکمه تنظیمات ===== */
         .settings-btn {
             width: 44px;
             height: 44px;
@@ -169,86 +172,82 @@
             opacity: 0.85;
         }
 
-        /* ===== بخش پایین ===== */
+        /* ===== بخش پایین (دکمه) ===== */
         .bottom-section {
             position: relative;
             z-index: 6;
             width: 100%;
-            padding: 0 20px 45px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 14px;
+            justify-content: center;
+            padding: 0 20px 40px;  /* 🔥 تغییر: 45px → 40px (۱۰٪ بالاتر) */
         }
 
-        /* ===== دکمه اجرا (طراحی شده با کد، بدون شکلک) ===== */
+        /* ===== دکمه اجرا ===== */
         .btn-launch {
-            width: 130px;
-            height: 130px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             background: radial-gradient(circle at 35% 30%, #ff5a5a, #cc0000);
             border: none;
             box-shadow:
-                0 0 50px rgba(255, 0, 0, 0.5),
-                0 8px 32px rgba(0, 0, 0, 0.6),
-                inset 0 -4px 12px rgba(0, 0, 0, 0.3);
+                0 0 30px rgba(255, 0, 0, 0.4),
+                0 5px 20px rgba(0, 0, 0, 0.5),
+                inset 0 -3px 10px rgba(0, 0, 0, 0.3);
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 4px;
-            position: relative;
+            gap: 2px;
             animation: pulse 2.8s ease-in-out infinite;
         }
 
-        /* حلقه بیرونی (برای زیبایی بیشتر) */
         .btn-launch::before {
             content: '';
             position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
             opacity: 0.4;
         }
 
-        /* آیکون پلی (با SVG) */
         .btn-launch .play-icon {
-            width: 40px;
-            height: 40px;
+            width: 24px;
+            height: 24px;
             fill: #fff;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
-            margin-bottom: 2px;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+            margin-bottom: 1px;
         }
 
-        /* متن دکمه */
         .btn-launch .label {
             color: #fff;
-            font-size: 0.75rem;
+            font-size: 0.55rem;
             font-weight: 700;
-            letter-spacing: 2.5px;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             opacity: 0.95;
             text-transform: uppercase;
         }
 
         .btn-launch:active {
-            transform: scale(0.92);
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.4);
+            transform: scale(0.90);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.25), 0 3px 12px rgba(0, 0, 0, 0.4);
         }
 
         /* ===== انیمیشن نبض ===== */
         @keyframes pulse {
             0%,
             100% {
-                box-shadow: 0 0 40px rgba(255, 0, 0, 0.4), 0 8px 32px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 0 25px rgba(255, 0, 0, 0.35), 0 5px 20px rgba(0, 0, 0, 0.5);
             }
             50% {
-                box-shadow: 0 0 70px rgba(255, 0, 0, 0.7), 0 8px 40px rgba(0, 0, 0, 0.6);
+                box-shadow: 0 0 45px rgba(255, 0, 0, 0.6), 0 5px 28px rgba(0, 0, 0, 0.6);
             }
         }
 
@@ -382,15 +381,16 @@
         /* ========== واکنش‌گرایی ========== */
         @media (max-width: 480px) {
             .btn-launch {
-                width: 110px;
-                height: 110px;
+                width: 70px;
+                height: 70px;
             }
             .btn-launch .play-icon {
-                width: 32px;
-                height: 32px;
+                width: 20px;
+                height: 20px;
             }
             .btn-launch .label {
-                font-size: 0.65rem;
+                font-size: 0.45rem;
+                letter-spacing: 1.5px;
             }
             .settings-btn {
                 width: 38px;
@@ -413,19 +413,19 @@
 
         @media (max-width: 380px) {
             .btn-launch {
-                width: 90px;
-                height: 90px;
+                width: 62px;
+                height: 62px;
             }
             .btn-launch .play-icon {
-                width: 26px;
-                height: 26px;
+                width: 18px;
+                height: 18px;
             }
             .btn-launch .label {
-                font-size: 0.55rem;
-                letter-spacing: 1.5px;
+                font-size: 0.4rem;
+                letter-spacing: 1px;
             }
             .bottom-section {
-                padding: 0 12px 25px;
+                padding: 0 12px 28px;
             }
         }
     </style>
@@ -447,7 +447,6 @@
         <!-- ========== صفحه اصلی ========== -->
         <div id="main-screen">
 
-            <!-- نوار بالا با دکمه تنظیمات -->
             <div class="top-bar">
                 <div class="settings-btn" id="settingsToggle">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -456,10 +455,8 @@
                 </div>
             </div>
 
-            <!-- بخش پایین با دکمه اجرا -->
             <div class="bottom-section">
                 <button class="btn-launch" id="launchBtn">
-                    <!-- آیکون پلی با SVG -->
                     <svg class="play-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M8 5v14l11-7L8 5z"/>
                     </svg>
@@ -553,15 +550,8 @@
             launchBtn.addEventListener('click', function() {
                 var username = usernameInput.value.trim() || 'کاربر';
                 var password = passwordInput.value.trim() || '';
-
-                // اینجا کد اتصال به سرور و اجرای بازی رو قرار بدی
-                // از WebView Interface استفاده کن
                 alert('🎮 اجرای بازی سه‌بعدی\n👤 ' + username + '\n🔑 ' + (password ? '****' : 'خالی'));
-
-                // مثال:
-                // if (typeof Android !== 'undefined') {
-                //     Android.launchGame('your-server:7777', username, password);
-                // }
+                // کد WebView Bridge رو اینجا قرار بده
             });
 
             // ---------- تنظیمات ----------
