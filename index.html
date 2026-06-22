@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>لانچر</title>
+    <style>
+        /* ========== ریست ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* ========== کانتینر ========== */
+        .launcher-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            max-width: 430px;
+            max-height: 932px;
+            background: #000;
+            overflow: hidden;
+            border-radius: 0;
+        }
+
+        /* ========== صفحه لودینگ ========== */
+        #loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('IMG_20260623_003341_050.jpg') no-repeat center center / 100% 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 8% 10% 18%;
+            z-index: 10;
+            transition: opacity 0.8s ease;
+        }
+
+        #loading-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+
+        .loading-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .progress-bar-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            border-radius: 30px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 20px #f7971e88;
+        }
+
+        .progress-text {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+            letter-spacing: 2px;
+            opacity: 0.9;
+        }
+
+        /* ========== صفحه اصلی ========== */
+        #main-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('IMG_20260622_214041_637.jpg') no-repeat center center / 100% 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 5;
+            padding: 0;
+        }
+
+        #main-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 0;
+        }
+
+        /* ===== نوار بالایی ===== */
+        .top-bar {
+            position: relative;
+            z-index: 6;
+            width: 100%;
+            padding: 18px 20px 0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+        }
+
+        /* ===== دکمه تنظیمات (گوشه بالا راست) ===== */
+        .settings-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .settings-btn:active {
+            transform: scale(0.88);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .settings-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: #fff;
+            opacity: 0.85;
+        }
+
+        /* ===== بخش پایین ===== */
+        .bottom-section {
+            position: relative;
+            z-index: 6;
+            width: 100%;
+            padding: 0 20px 45px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        /* ===== دکمه اجرا (طراحی شده با کد، بدون شکلک) ===== */
+        .btn-launch {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #ff5a5a, #cc0000);
+            border: none;
+            box-shadow:
+                0 0 50px rgba(255, 0, 0, 0.5),
+                0 8px 32px rgba(0, 0, 0, 0.6),
+                inset 0 -4px 12px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            position: relative;
+            animation: pulse 2.8s ease-in-out infinite;
+        }
+
+        /* حلقه بیرونی (برای زیبایی بیشتر) */
+        .btn-launch::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            opacity: 0.4;
+        }
+
+        /* آیکون پلی (با SVG) */
+        .btn-launch .play-icon {
+            width: 40px;
+            height: 40px;
+            fill: #fff;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+            margin-bottom: 2px;
+        }
+
+        /* متن دکمه */
+        .btn-launch .label {
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+            opacity: 0.95;
+            text-transform: uppercase;
+        }
+
+        .btn-launch:active {
+            transform: scale(0.92);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ===== انیمیشن نبض ===== */
+        @keyframes pulse {
+            0%,
+            100% {
+                box-shadow: 0 0 40px rgba(255, 0, 0, 0.4), 0 8px 32px rgba(0, 0, 0, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 70px rgba(255, 0, 0, 0.7), 0 8px 40px rgba(0, 0, 0, 0.6);
+            }
+        }
+
+        /* ========== صفحه تنظیمات ========== */
+        #settings-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            z-index: 30;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 24px;
+            animation: fadeIn 0.35s ease;
+        }
+
+        #settings-screen.show {
+            display: flex;
+        }
+
+        .settings-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+            padding: 32px 24px 28px;
+            width: 100%;
+            max-width: 370px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .settings-card h2 {
+            color: #fff;
+            font-size: 1.6rem;
+            text-align: center;
+            margin-bottom: 22px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            opacity: 0.95;
+        }
+
+        .settings-card label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            display: block;
+            margin: 18px 0 6px;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .settings-card input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .settings-card input:focus {
+            border-color: #f7971e;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 24px rgba(247, 151, 30, 0.04);
+        }
+
+        .settings-card input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .settings-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .settings-actions button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-save {
+            background: linear-gradient(145deg, #f7971e, #e6a800);
+            color: #1a1a1a;
+            box-shadow: 0 4px 20px rgba(247, 151, 30, 0.25);
+        }
+
+        .btn-save:active {
+            transform: scale(0.95);
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .btn-back:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* ========== انیمیشن ========== */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.96) translateY(12px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* ========== واکنش‌گرایی ========== */
+        @media (max-width: 480px) {
+            .btn-launch {
+                width: 110px;
+                height: 110px;
+            }
+            .btn-launch .play-icon {
+                width: 32px;
+                height: 32px;
+            }
+            .btn-launch .label {
+                font-size: 0.65rem;
+            }
+            .settings-btn {
+                width: 38px;
+                height: 38px;
+            }
+            .settings-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+            .bottom-section {
+                padding: 0 16px 35px;
+            }
+            .settings-card {
+                padding: 24px 18px 22px;
+            }
+            .settings-card h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .btn-launch {
+                width: 90px;
+                height: 90px;
+            }
+            .btn-launch .play-icon {
+                width: 26px;
+                height: 26px;
+            }
+            .btn-launch .label {
+                font-size: 0.55rem;
+                letter-spacing: 1.5px;
+            }
+            .bottom-section {
+                padding: 0 12px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="launcher-container">
+
+        <!-- ========== صفحه لودینگ ========== -->
+        <div id="loading-screen">
+            <div class="loading-content">
+                <div class="progress-bar-track">
+                    <div id="progressFill" class="progress-bar-fill"></div>
+                </div>
+                <div id="progressText" class="progress-text">۰%</div>
+            </div>
+        </div>
+
+        <!-- ========== صفحه اصلی ========== -->
+        <div id="main-screen">
+
+            <!-- نوار بالا با دکمه تنظیمات -->
+            <div class="top-bar">
+                <div class="settings-btn" id="settingsToggle">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5zm7.43-2.53c.04-.32.07-.64.07-.97s-.03-.65-.07-.97l2.11-1.65a.49.49 0 0 0 .12-.62l-2-3.46a.5.5 0 0 0-.59-.21l-2.49 1a6.98 6.98 0 0 0-1.69-.97l-.37-2.65A.5.5 0 0 0 14.02 2h-4.04a.5.5 0 0 0-.49.42l-.37 2.65c-.6.24-1.16.57-1.69.97l-2.49-1a.5.5 0 0 0-.59.21l-2 3.46a.5.5 0 0 0 .12.62l2.11 1.65c-.04.32-.07.64-.07.97s.03.65.07.97L2.11 15.7a.49.49 0 0 0-.12.62l2 3.46c.12.21.35.3.59.21l2.49-1c.53.4 1.09.73 1.69.97l.37 2.65c.05.27.27.46.49.46h4.04c.23 0 .44-.19.49-.42l.37-2.65c.6-.24 1.16-.57 1.69-.97l2.49 1c.24.09.47 0 .59-.21l2-3.46a.49.49 0 0 0-.12-.62l-2.11-1.65z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- بخش پایین با دکمه اجرا -->
+            <div class="bottom-section">
+                <button class="btn-launch" id="launchBtn">
+                    <!-- آیکون پلی با SVG -->
+                    <svg class="play-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 5v14l11-7L8 5z"/>
+                    </svg>
+                    <span class="label">اجرا</span>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- ========== صفحه تنظیمات ========== -->
+        <div id="settings-screen">
+            <div class="settings-card">
+                <h2>⚙️ تنظیمات</h2>
+
+                <label>نام کاربری لانچر</label>
+                <input type="text" id="usernameInput" placeholder="نام کاربری را وارد کنید" />
+
+                <label>رمز عبور لانچر</label>
+                <input type="password" id="passwordInput" placeholder="رمز عبور را وارد کنید" />
+
+                <div class="settings-actions">
+                    <button class="btn-save" id="saveSettingsBtn">ذخیره</button>
+                    <button class="btn-back" id="closeSettingsBtn">بازگشت</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ---------- المنت‌ها ----------
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainScreen = document.getElementById('main-screen');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const launchBtn = document.getElementById('launchBtn');
+            const settingsToggle = document.getElementById('settingsToggle');
+            const settingsScreen = document.getElementById('settings-screen');
+            const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+            const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+            const usernameInput = document.getElementById('usernameInput');
+            const passwordInput = document.getElementById('passwordInput');
+
+            // ---------- لودینگ ----------
+            let progress = 0;
+            const totalDuration = 4000;
+            const intervalTime = 30;
+            const increment = 100 / (totalDuration / intervalTime);
+            let intervalId = null;
+
+            function updateProgress() {
+                progress += increment;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(intervalId);
+                    progressFill.style.width = '100%';
+                    progressText.textContent = '۱۰۰%';
+                    goToMainScreen();
+                    return;
+                }
+                progressFill.style.width = progress + '%';
+                progressText.textContent = Math.round(progress) + '%';
+            }
+
+            function goToMainScreen() {
+                loadingScreen.style.opacity = '0';
+                setTimeout(function() {
+                    loadingScreen.style.display = 'none';
+                    mainScreen.style.display = 'flex';
+                    mainScreen.style.animation = 'fadeIn 0.6s ease';
+                }, 800);
+            }
+
+            function startLoading() {
+                progress = 0;
+                progressFill.style.width = '0%';
+                progressText.textContent = '۰%';
+                loadingScreen.style.display = 'flex';
+                loadingScreen.style.opacity = '1';
+                mainScreen.style.display = 'none';
+                settingsScreen.classList.remove('show');
+                settingsScreen.style.display = 'none';
+                if (intervalId) clearInterval(intervalId);
+                intervalId = setInterval(updateProgress, intervalTime);
+            }
+
+            // ---------- دکمه اجرا ----------
+            launchBtn.addEventListener('click', function() {
+                var username = usernameInput.value.trim() || 'کاربر';
+                var password = passwordInput.value.trim() || '';
+
+                // اینجا کد اتصال به سرور و اجرای بازی رو قرار بدی
+                // از WebView Interface استفاده کن
+                alert('🎮 اجرای بازی سه‌بعدی\n👤 ' + username + '\n🔑 ' + (password ? '****' : 'خالی'));
+
+                // مثال:
+                // if (typeof Android !== 'undefined') {
+                //     Android.launchGame('your-server:7777', username, password);
+                // }
+            });
+
+            // ---------- تنظیمات ----------
+            function openSettings() {
+                settingsScreen.style.display = 'flex';
+                settingsScreen.classList.add('show');
+                usernameInput.value = localStorage.getItem('launcher_username') || '';
+                passwordInput.value = localStorage.getItem('launcher_password') || '';
+            }
+
+            function closeSettings() {
+                settingsScreen.classList.remove('show');
+                setTimeout(function() {
+                    settingsScreen.style.display = 'none';
+                }, 300);
+            }
+
+            settingsToggle.addEventListener('click', openSettings);
+            closeSettingsBtn.addEventListener('click', closeSettings);
+
+            saveSettingsBtn.addEventListener('click', function() {
+                localStorage.setItem('launcher_username', usernameInput.value.trim());
+                localStorage.setItem('launcher_password', passwordInput.value.trim());
+                alert('✅ تنظیمات ذخیره شد');
+                closeSettings();
+            });
+
+            settingsScreen.addEventListener('click', function(e) {
+                if (e.target === settingsScreen) closeSettings();
+            });
+
+            // ---------- شروع ----------
+            window.addEventListener('load', startLoading);
+
+        })();
+    </script>
+
+</body>
+</html>
