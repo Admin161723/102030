@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>لانچر</title>
+    <title>لانچر کبیر</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
-        /* ========== ریست ========== */
         * {
             margin: 0;
             padding: 0;
@@ -13,7 +13,7 @@
         }
 
         body {
-            font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #000;
             display: flex;
             justify-content: center;
@@ -24,7 +24,6 @@
             user-select: none;
         }
 
-        /* ========== کانتینر ========== */
         .launcher-container {
             position: relative;
             width: 100vw;
@@ -33,125 +32,140 @@
             max-height: 932px;
             background: #000;
             overflow: hidden;
-            border-radius: 0;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
         }
 
-        /* ========== صفحه لودینگ ========== */
-        #loading-screen {
+        .page {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('IMG_20260623_003341_050.jpg') no-repeat center center / 100% 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 8% 10% 18%;
-            z-index: 10;
-            transition: opacity 0.8s ease;
-        }
-
-        #loading-screen::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 0;
-        }
-
-        .loading-content {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 320px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .progress-bar-track {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #f7971e, #ffd200);
-            border-radius: 30px;
-            transition: width 0.1s linear;
-            box-shadow: 0 0 20px #f7971e88;
-        }
-
-        .progress-text {
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 600;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
-            letter-spacing: 2px;
-            opacity: 0.9;
-        }
-
-        /* ========== صفحه اصلی ========== */
-        #main-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('IMG_20260622_214041_637.jpg') no-repeat center center / 100% 100%;
             display: none;
             flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
             z-index: 5;
-            padding: 0;
+        }
+        .page.active {
+            display: flex;
+        }
+        /* ===== LOADING PAGE ===== */
+        #loading-page {
+            background: #0a0a14;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            position: relative;
+        }
+        #loading-page .bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 1;
+        }
+        .loading-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            padding: 0 30px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        .loading-percent {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            letter-spacing: 2px;
+        }
+        .loading-bar-container {
+            width: 100%;
+            max-width: 300px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        .loading-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24);
+            background-size: 200% 100%;
+            border-radius: 10px;
+            transition: width 0.1s linear;
+            animation: shimmer 2s linear infinite;
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
         }
 
-        #main-screen::before {
+        /* ===== LAUNCHER PAGE ===== */
+        #launcher-page {
+            background: #1a1a2e;
+            position: relative;
+        }
+        #launcher-page .bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: 0;
+            pointer-events: none;
+        }
+        #launcher-page::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 0;
+            background: rgba(0, 0, 0, 0.25);
+            pointer-events: none;
+            z-index: 1;
         }
 
-        /* ===== نوار بالایی ===== */
-        .top-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 6;
-            width: 100%;
-            padding: 18px 20px 0;
+        .launcher-top {
+            position: relative;
+            z-index: 10;
+            padding: 15px 20px;
             display: flex;
-            justify-content: flex-end;
-            align-items: flex-start;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        /* ===== دکمه تنظیمات ===== */
-        .settings-btn {
+        .menu-btn {
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.10);
+            background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -159,274 +173,795 @@
             transition: all 0.25s ease;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
-
-        .settings-btn:active {
+        .menu-btn:active {
             transform: scale(0.88);
-            background: rgba(255, 255, 255, 0.2);
+        }
+        .menu-btn i {
+            color: #fff;
+            font-size: 1.2rem;
         }
 
-        .settings-btn svg {
-            width: 22px;
-            height: 22px;
-            fill: #fff;
-            opacity: 0.85;
-        }
-
-        /* ===== بخش پایین (دکمه) ===== */
-        .bottom-section {
-            position: relative;
-            z-index: 6;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
+        .profile-section {
+            display: none;
             align-items: center;
-            justify-content: center;
-            padding: 0 20px 40px;  /* 🔥 تغییر: 45px → 40px (۱۰٪ بالاتر) */
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 6px 14px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+        .profile-section.show {
+            display: flex;
+        }
+        .profile-pic {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .profile-name {
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .verified-badge {
+            color: #3b82f6;
+            font-size: 0.9rem;
         }
 
-        /* ===== دکمه اجرا ===== */
-        .btn-launch {
-            width: 80px;
-            height: 80px;
+        .launcher-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            padding: 0 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-shop-green {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, #ff5a5a, #cc0000);
+            background: radial-gradient(circle at 35% 30%, #34d399, #059669);
             border: none;
-            box-shadow:
-                0 0 30px rgba(255, 0, 0, 0.4),
-                0 5px 20px rgba(0, 0, 0, 0.5),
-                inset 0 -3px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 25px rgba(52, 211, 153, 0.5), 0 5px 20px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 1.5rem;
+        }
+        .btn-shop-green:active {
+            transform: scale(0.9);
+        }
+
+        .btn-launch {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #ff5a5a, #dc2626);
+            border: none;
+            box-shadow: 0 0 35px rgba(220, 38, 38, 0.5), 0 8px 25px rgba(0, 0, 0, 0.5);
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 2px;
-            animation: pulse 2.8s ease-in-out infinite;
+            gap: 4px;
+            animation: pulse 2.5s ease-in-out infinite;
         }
-
-        .btn-launch::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            border-radius: 50%;
-            border: 1.5px solid rgba(255, 255, 255, 0.15);
-            opacity: 0.4;
+        .btn-launch:active {
+            transform: scale(0.9);
         }
-
-        .btn-launch .play-icon {
-            width: 24px;
-            height: 24px;
-            fill: #fff;
-            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
-            margin-bottom: 1px;
-        }
-
-        .btn-launch .label {
+        .btn-launch i {
             color: #fff;
-            font-size: 0.55rem;
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+        }
+        .btn-launch span {
+            color: #fff;
+            font-size: 0.65rem;
             font-weight: 700;
             letter-spacing: 2px;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            opacity: 0.95;
-            text-transform: uppercase;
         }
 
-        .btn-launch:active {
-            transform: scale(0.90);
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.25), 0 3px 12px rgba(0, 0, 0, 0.4);
+        .btn-chat {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #60a5fa, #2563eb);
+            border: none;
+            box-shadow: 0 0 25px rgba(96, 165, 250, 0.5), 0 5px 20px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 1.5rem;
+        }
+        .btn-chat:active {
+            transform: scale(0.9);
         }
 
-        /* ===== انیمیشن نبض ===== */
         @keyframes pulse {
             0%,
             100% {
-                box-shadow: 0 0 25px rgba(255, 0, 0, 0.35), 0 5px 20px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 0 25px rgba(220, 38, 38, 0.4), 0 8px 25px rgba(0, 0, 0, 0.5);
             }
             50% {
-                box-shadow: 0 0 45px rgba(255, 0, 0, 0.6), 0 5px 28px rgba(0, 0, 0, 0.6);
+                box-shadow: 0 0 45px rgba(220, 38, 38, 0.7), 0 8px 30px rgba(0, 0, 0, 0.6);
             }
         }
 
-        /* ========== صفحه تنظیمات ========== */
-        #settings-screen {
+        /* ===== MAIN MENU ===== */
+        #main-menu {
+            position: absolute;
+            top: 70px;
+            left: 20px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 15px;
+            min-width: 200px;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        #main-menu.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .menu-item {
+            padding: 12px 20px;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .menu-item i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* ===== AUTH SCREEN ===== */
+        #auth-screen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            z-index: 30;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 50;
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 30px 24px;
-            animation: fadeIn 0.35s ease;
+            overflow-y: auto;
         }
-
-        #settings-screen.show {
+        #auth-screen.show {
             display: flex;
         }
 
-        .settings-card {
-            background: rgba(255, 255, 255, 0.05);
+        .auth-card {
+            background: linear-gradient(145deg, rgba(30, 25, 35, 0.98), rgba(20, 15, 25, 0.95));
             border-radius: 32px;
-            padding: 32px 24px 28px;
+            padding: 35px 28px;
             width: 100%;
-            max-width: 370px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7);
         }
-
-        .settings-card h2 {
+        .auth-card h2 {
             color: #fff;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             text-align: center;
-            margin-bottom: 22px;
-            font-weight: 300;
-            letter-spacing: 2px;
-            opacity: 0.95;
+            margin-bottom: 30px;
+            font-weight: 700;
         }
-
-        .settings-card label {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.8rem;
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        .auth-tab.active {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a1a1a;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
             display: block;
-            margin: 18px 0 6px;
-            letter-spacing: 0.5px;
+            margin-bottom: 8px;
             font-weight: 500;
         }
-
-        .settings-card input {
+        .form-group input {
             width: 100%;
             padding: 14px 18px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             background: rgba(255, 255, 255, 0.05);
             color: #fff;
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
             transition: all 0.3s;
             font-family: inherit;
         }
-
-        .settings-card input:focus {
-            border-color: #f7971e;
+        .form-group input:focus {
+            border-color: #fbbf24;
             background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 24px rgba(247, 151, 30, 0.04);
         }
-
-        .settings-card input::placeholder {
-            color: rgba(255, 255, 255, 0.2);
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
         }
-
-        .settings-actions {
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+        .file-input-label {
             display: flex;
-            gap: 12px;
-            margin-top: 28px;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s;
         }
-
-        .settings-actions button {
-            flex: 1;
-            padding: 15px;
+        .file-input-label:hover {
+            border-color: #fbbf24;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .preview-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 14px;
+            display: none;
+        }
+        .preview-img.show {
+            display: block;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
             border: none;
             border-radius: 16px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a1a1a;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            font-family: inherit;
+        }
+        .btn-submit:active {
+            transform: scale(0.97);
+        }
+        .btn-close-auth {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
             font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            margin-top: 12px;
             font-family: inherit;
         }
-
-        .btn-save {
-            background: linear-gradient(145deg, #f7971e, #e6a800);
-            color: #1a1a1a;
-            box-shadow: 0 4px 20px rgba(247, 151, 30, 0.25);
+        .btn-close-auth:active {
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        .btn-save:active {
-            transform: scale(0.95);
+        /* ===== PROFILE MENU ===== */
+        #profile-menu {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 15px;
+            min-width: 220px;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
-
-        .btn-back {
-            background: rgba(255, 255, 255, 0.06);
+        #profile-menu.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        .profile-menu-header {
+            text-align: center;
+            padding: 10px 0 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 10px;
+        }
+        .profile-menu-pic {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 10px;
+        }
+        .profile-menu-name {
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .profile-menu-item {
+            padding: 12px 15px;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 500;
+        }
+        .profile-menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .profile-menu-item i {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .price-tag {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
         }
 
-        .btn-back:active {
+        /* ===== SHOP PAGE ===== */
+        #shop-page {
+            background: #1a1a2e;
+            position: relative;
+        }
+        #shop-page .bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: 0;
+            pointer-events: none;
+        }
+        #shop-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .shop-header {
+            position: relative;
+            z-index: 10;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .back-btn:active {
+            transform: scale(0.88);
+        }
+        .back-btn i {
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        .shop-title {
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .wallet-section {
+            position: relative;
+            z-index: 10;
+            padding: 0 20px 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .wallet-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 15px 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .wallet-card:active {
             transform: scale(0.95);
-            background: rgba(255, 255, 255, 0.12);
+        }
+        .wallet-card i {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        .wallet-card.coins i {
+            color: #fbbf24;
+        }
+        .wallet-card.dollars i {
+            color: #34d399;
+        }
+        .wallet-card.toman i {
+            color: #60a5fa;
+        }
+        .wallet-card .amount {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .wallet-card .label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.7rem;
         }
 
-        /* ========== انیمیشن ========== */
+        .shop-tabs {
+            position: relative;
+            z-index: 10;
+            padding: 0 20px 15px;
+            display: flex;
+            gap: 10px;
+        }
+        .shop-tab {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .shop-tab.active {
+            background: rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.5);
+        }
+
+        .shop-content {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 30px;
+        }
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
         @keyframes fadeIn {
-            0% {
+            from {
                 opacity: 0;
-                transform: scale(0.96) translateY(12px);
+                transform: translateY(10px);
             }
-            100% {
+            to {
                 opacity: 1;
-                transform: scale(1) translateY(0);
+                transform: translateY(0);
             }
         }
 
-        /* ========== واکنش‌گرایی ========== */
-        @media (max-width: 480px) {
-            .btn-launch {
-                width: 70px;
-                height: 70px;
-            }
-            .btn-launch .play-icon {
-                width: 20px;
-                height: 20px;
-            }
-            .btn-launch .label {
-                font-size: 0.45rem;
-                letter-spacing: 1.5px;
-            }
-            .settings-btn {
-                width: 38px;
-                height: 38px;
-            }
-            .settings-btn svg {
-                width: 18px;
-                height: 18px;
-            }
-            .bottom-section {
-                padding: 0 16px 35px;
-            }
-            .settings-card {
-                padding: 24px 18px 22px;
-            }
-            .settings-card h2 {
-                font-size: 1.3rem;
-            }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
         }
 
-        @media (max-width: 380px) {
-            .btn-launch {
-                width: 62px;
-                height: 62px;
+        .product-card {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 14px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        .product-card:active {
+            transform: scale(0.97);
+        }
+        .product-card img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+        }
+        .product-card .name {
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .product-card .price {
+            color: #fbbf24;
+            font-size: 0.9rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .product-card .price small {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.7rem;
+            font-weight: 400;
+        }
+        .buy-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a1a1a;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+        .buy-btn:active {
+            transform: scale(0.95);
+        }
+        .buy-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== INCREASE WALLET MODAL ===== */
+        #increase-modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 24px;
+        }
+        #increase-modal.show {
+            display: flex;
+        }
+        .modal-card {
+            background: linear-gradient(145deg, rgba(30, 25, 35, 0.98), rgba(20, 15, 25, 0.95));
+            border-radius: 32px;
+            padding: 35px 28px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7);
+        }
+        .modal-card h2 {
+            color: #fff;
+            font-size: 1.6rem;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        .increase-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .increase-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .increase-option:active {
+            transform: scale(0.95);
+            border-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.1);
+        }
+        .increase-option .amount-text {
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+        .increase-option .to-text {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+        }
+        .btn-close-modal {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        .btn-close-modal:active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #fff;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            max-width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .toast.show {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
             }
-            .btn-launch .play-icon {
-                width: 18px;
-                height: 18px;
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
             }
-            .btn-launch .label {
-                font-size: 0.4rem;
-                letter-spacing: 1px;
-            }
-            .bottom-section {
-                padding: 0 12px 28px;
-            }
+        }
+        .toast.error {
+            border-color: #ef4444;
+            color: #fca5a5;
+        }
+        .toast.success {
+            border-color: #22c55e;
+            color: #86efac;
+        }
+        .toast.info {
+            border-color: #3b82f6;
+            color: #93c5fd;
+        }
+
+        /* ===== EDIT PROFILE ===== */
+        #edit-profile-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 60;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 24px;
+            overflow-y: auto;
+        }
+        #edit-profile-screen.show {
+            display: flex;
         }
     </style>
 </head>
@@ -434,160 +969,787 @@
 
     <div class="launcher-container">
 
-        <!-- ========== صفحه لودینگ ========== -->
-        <div id="loading-screen">
-            <div class="loading-content">
-                <div class="progress-bar-track">
-                    <div id="progressFill" class="progress-bar-fill"></div>
+        <!-- Loading Page -->
+        <div id="loading-page" class="page active">
+            <img src="IMG_20260624_194139_214.png" alt="" class="bg-img">
+            <div class="loading-overlay"></div>
+            <div class="loading-bottom">
+                <div class="loading-percent" id="loadPercent">۰٪</div>
+                <div class="loading-bar-container">
+                    <div class="loading-bar-fill" id="loadFill"></div>
                 </div>
-                <div id="progressText" class="progress-text">۰%</div>
             </div>
         </div>
 
-        <!-- ========== صفحه اصلی ========== -->
-        <div id="main-screen">
-
-            <div class="top-bar">
-                <div class="settings-btn" id="settingsToggle">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5zm7.43-2.53c.04-.32.07-.64.07-.97s-.03-.65-.07-.97l2.11-1.65a.49.49 0 0 0 .12-.62l-2-3.46a.5.5 0 0 0-.59-.21l-2.49 1a6.98 6.98 0 0 0-1.69-.97l-.37-2.65A.5.5 0 0 0 14.02 2h-4.04a.5.5 0 0 0-.49.42l-.37 2.65c-.6.24-1.16.57-1.69.97l-2.49-1a.5.5 0 0 0-.59.21l-2 3.46a.5.5 0 0 0 .12.62l2.11 1.65c-.04.32-.07.64-.07.97s.03.65.07.97L2.11 15.7a.49.49 0 0 0-.12.62l2 3.46c.12.21.35.3.59.21l2.49-1c.53.4 1.09.73 1.69.97l.37 2.65c.05.27.27.46.49.46h4.04c.23 0 .44-.19.49-.42l.37-2.65c.6-.24 1.16-.57 1.69-.97l2.49 1c.24.09.47 0 .59-.21l2-3.46a.49.49 0 0 0-.12-.62l-2.11-1.65z"/>
-                    </svg>
+        <!-- Launcher Page -->
+        <div id="launcher-page" class="page">
+            <img src="IMG_20260624_194706_469.jpg" alt="" class="bg-img">
+            <div class="launcher-top">
+                <div class="menu-btn" id="menuBtn">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="profile-section" id="profileSection">
+                    <img src="" alt="Profile" class="profile-pic" id="launcherProfilePic">
+                    <div class="profile-name" id="launcherProfileName"></div>
                 </div>
             </div>
 
-            <div class="bottom-section">
+            <div class="launcher-bottom">
+                <button class="btn-shop-green" id="shopBtn">
+                    <i class="fas fa-store"></i>
+                </button>
                 <button class="btn-launch" id="launchBtn">
-                    <svg class="play-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8 5v14l11-7L8 5z"/>
-                    </svg>
-                    <span class="label">اجرا</span>
+                    <i class="fas fa-play"></i>
+                    <span>اجرا</span>
+                </button>
+                <button class="btn-chat" id="chatBtn">
+                    <i class="fas fa-comment"></i>
                 </button>
             </div>
 
-        </div>
-
-        <!-- ========== صفحه تنظیمات ========== -->
-        <div id="settings-screen">
-            <div class="settings-card">
-                <h2>⚙️ تنظیمات</h2>
-
-                <label>نام کاربری لانچر</label>
-                <input type="text" id="usernameInput" placeholder="نام کاربری را وارد کنید" />
-
-                <label>رمز عبور لانچر</label>
-                <input type="password" id="passwordInput" placeholder="رمز عبور را وارد کنید" />
-
-                <div class="settings-actions">
-                    <button class="btn-save" id="saveSettingsBtn">ذخیره</button>
-                    <button class="btn-back" id="closeSettingsBtn">بازگشت</button>
+            <!-- Main Menu -->
+            <div id="main-menu">
+                <div class="menu-item" id="loginMenuItem">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>ورود</span>
+                </div>
+                <div class="menu-item" id="registerMenuItem">
+                    <i class="fas fa-user-plus"></i>
+                    <span>ثبت‌نام</span>
                 </div>
             </div>
+
+            <!-- Profile Menu -->
+            <div id="profile-menu">
+                <div class="profile-menu-header">
+                    <img src="" alt="Profile" class="profile-menu-pic" id="menuProfilePic">
+                    <div class="profile-menu-name" id="menuProfileName"></div>
+                </div>
+                <div class="profile-menu-item" id="editProfileBtn">
+                    <span>ویرایش اطلاعات</span>
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="profile-menu-item" id="logoutBtn">
+                    <span>خروج از حساب</span>
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Screen -->
+        <div id="auth-screen">
+            <div class="auth-card">
+                <h2 id="authTitle">ورود به حساب</h2>
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="tabLogin">ورود</button>
+                    <button class="auth-tab" id="tabRegister">ثبت‌نام</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>شماره موبایل</label>
+                        <input type="tel" id="loginPhone" placeholder="09xxxxxxxxx" required />
+                    </div>
+                    <div class="form-group">
+                        <label>رمز عبور</label>
+                        <input type="password" id="loginPass" placeholder="رمز عبور" required />
+                    </div>
+                    <button type="submit" class="btn-submit">ورود</button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="registerForm" style="display: none;">
+                    <div class="form-group">
+                        <label>انتخاب عکس پروفایل</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="profilePicInput" accept="image/*" />
+                            <label for="profilePicInput" class="file-input-label" id="fileLabel">
+                                <i class="fas fa-camera"></i>
+                                <span>انتخاب از گالری</span>
+                            </label>
+                            <img src="" alt="Preview" class="preview-img" id="previewImg">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>شماره موبایل</label>
+                        <input type="tel" id="regPhone" placeholder="09xxxxxxxxx" required />
+                    </div>
+                    <div class="form-group">
+                        <label>نام اکانت</label>
+                        <input type="text" id="regName" placeholder="نام کاربری" required />
+                    </div>
+                    <div class="form-group">
+                        <label>رمز عبور</label>
+                        <input type="password" id="regPass" placeholder="رمز عبور" required />
+                    </div>
+                    <div class="form-group">
+                        <label>تکرار رمز عبور</label>
+                        <input type="password" id="regPassConfirm" placeholder="تکرار رمز عبور" required />
+                    </div>
+                    <div class="form-group">
+                        <label>سن</label>
+                        <input type="number" id="regAge" placeholder="سن" min="1" max="120" required />
+                    </div>
+                    <button type="submit" class="btn-submit">ثبت‌نام</button>
+                </form>
+
+                <button class="btn-close-auth" id="closeAuthBtn">بازگشت</button>
+            </div>
+        </div>
+
+        <!-- Edit Profile Screen -->
+        <div id="edit-profile-screen">
+            <div class="auth-card">
+                <h2>ویرایش اطلاعات</h2>
+                <form id="editForm">
+                    <div class="form-group">
+                        <label>عکس پروفایل جدید <span class="price-tag">۱۰ تومان</span></label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="editPicInput" accept="image/*" />
+                            <label for="editPicInput" class="file-input-label" id="editFileLabel">
+                                <i class="fas fa-camera"></i>
+                                <span>انتخاب عکس جدید</span>
+                            </label>
+                            <img src="" alt="Preview" class="preview-img" id="editPreviewImg">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>نام اکانت <span class="price-tag">۱۰۰ سکه</span></label>
+                        <input type="text" id="editName" required />
+                    </div>
+                    <div class="form-group">
+                        <label>رمز عبور جدید <span class="price-tag">۱۰۰ سکه</span></label>
+                        <input type="password" id="editPass" />
+                    </div>
+                    <div class="form-group">
+                        <label>سن <span class="price-tag">۱۰۰ سکه</span></label>
+                        <input type="number" id="editAge" min="1" max="120" required />
+                    </div>
+                    <button type="submit" class="btn-submit">ذخیره تغییرات</button>
+                </form>
+                <button class="btn-close-auth" id="closeEditBtn">انصراف</button>
+            </div>
+        </div>
+
+        <!-- Increase Wallet Modal -->
+        <div id="increase-modal">
+            <div class="modal-card">
+                <h2>افزایش کیف پول</h2>
+                <div class="increase-options">
+                    <div class="increase-option" onclick="increaseWallet(20)">
+                        <div class="amount-text">۲۰ تومان</div>
+                        <div class="to-text">۲۰ تومان</div>
+                    </div>
+                    <div class="increase-option" onclick="increaseWallet(100)">
+                        <div class="amount-text">۱۰۰ تومان</div>
+                        <div class="to-text">۱۰۰ تومان</div>
+                    </div>
+                    <div class="increase-option" onclick="increaseWallet(500)">
+                        <div class="amount-text">۵۰۰ تومان</div>
+                        <div class="to-text">۵۰۰ تومان</div>
+                    </div>
+                    <div class="increase-option" onclick="increaseWallet(1000000)">
+                        <div class="amount-text">۱ میلیون</div>
+                        <div class="to-text">۱ میلیون</div>
+                    </div>
+                </div>
+                <button class="btn-close-modal" onclick="closeIncreaseModal()">بستن</button>
+            </div>
+        </div>
+
+        <!-- Shop Page -->
+        <div id="shop-page" class="page">
+            <img src="IMG_20260624_194140_933.png" alt="" class="bg-img">
+            <div class="shop-header">
+                <div class="back-btn" id="backBtn">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="shop-title">فروشگاه</div>
+                <div style="width: 44px;"></div>
+            </div>
+
+            <div class="wallet-section">
+                <div class="wallet-card coins">
+                    <i class="fas fa-coins"></i>
+                    <div class="amount" id="shopCoins">۰</div>
+                    <div class="label">سکه</div>
+                </div>
+                <div class="wallet-card dollars">
+                    <i class="fas fa-dollar-sign"></i>
+                    <div class="amount" id="shopDollars">۰</div>
+                    <div class="label">دلار</div>
+                </div>
+                <div class="wallet-card toman" id="increaseWalletBtn">
+                    <i class="fas fa-wallet"></i>
+                    <div class="amount" id="shopWallet">۰</div>
+                    <div class="label">تومان</div>
+                </div>
+            </div>
+
+            <div class="shop-tabs">
+                <button class="shop-tab active" onclick="switchShopTab('coins')">
+                    <i class="fas fa-coins"></i>
+                    <span>سکه</span>
+                </button>
+                <button class="shop-tab" onclick="switchShopTab('dollars')">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>دلار</span>
+                </button>
+            </div>
+
+            <div class="shop-content">
+                <div id="coinsPanel" class="tab-panel active">
+                    <div class="product-grid">
+                        <div class="product-card">
+                            <img src="ironcoin.png" alt="50 coins" onerror="this.style.display='none'">
+                            <div class="name">۵۰ سکه</div>
+                            <div class="price">۲۰,۰۰۰ <small>تومان</small></div>
+                            <button class="buy-btn" onclick="buyItem(20000, 50, 'coins')">خرید</button>
+                        </div>
+                        <div class="product-card">
+                            <img src="ironcoin.png" alt="100 coins" onerror="this.style.display='none'">
+                            <div class="name">۱۰۰ سکه</div>
+                            <div class="price">۵۰,۰۰۰ <small>تومان</small></div>
+                            <button class="buy-btn" onclick="buyItem(50000, 100, 'coins')">خرید</button>
+                        </div>
+                        <div class="product-card">
+                            <img src="ironcoin.png" alt="200 coins" onerror="this.style.display='none'">
+                            <div class="name">۲۰۰ سکه</div>
+                            <div class="price">۸۵,۰۰۰ <small>تومان</small></div>
+                            <button class="buy-btn" onclick="buyItem(85000, 200, 'coins')">خرید</button>
+                        </div>
+                        <div class="product-card">
+                            <img src="ironcoin.png" alt="500 coins" onerror="this.style.display='none'">
+                            <div class="name">۵۰۰ سکه</div>
+                            <div class="price">۱۷۰,۰۰۰ <small>تومان</small></div>
+                            <button class="buy-btn" onclick="buyItem(170000, 500, 'coins')">خرید</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dollarsPanel" class="tab-panel">
+                    <div class="product-grid">
+                        <div class="product-card">
+                            <img src="01.png" alt="100k dollars" onerror="this.style.display='none'">
+                            <div class="name">۱۰۰,۰۰۰$</div>
+                            <div class="price">۱۰,۰۰۰ <small>تومان</small></div>
+                            <button class="buy-btn" onclick="buyItem(10000, 100000, 'dollars')">خرید</button>
+                        </div>
+                        <div class="product-card">
+                            <img src="01.png" alt="500k dollars" onerror="this.style.display='none'">
+                            <div class="name">۵۰۰,۰۰۰$</div>
+                            <div class="price">۴۵,۰۰۰ <small>تومان</small></div>
+                            <button class="buy-btn" onclick="buyItem(45000, 500000, 'dollars')">خرید</button>
+                        </div>
+                        <div class="product-card">
+                            <img src="01.png" alt="1M dollars" onerror="this.style.display='none'">
+                            <div class="name">۱,۰۰۰,۰۰۰$</div>
+                            <div class="price">۹۵,۰۰۰ <small>تومان</small></div>
+                            <button class="buy-btn" onclick="buyItem(95000, 1000000, 'dollars')">خرید</button>
+                        </div>
+                        <div class="product-card">
+                            <img src="01.png" alt="2M dollars" onerror="this.style.display='none'">
+                            <div class="name">۲,۰۰۰,۰۰۰$</div>
+                            <div class="price">۱۸۵,۰۰۰ <small>تومان</small></div>
+                            <button class="buy-btn" onclick="buyItem(185000, 2000000, 'dollars')">خرید</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast -->
+        <div id="toast" class="toast">
+            <span id="toastMsg">پیام</span>
         </div>
 
     </div>
 
     <script>
-        (function() {
-            'use strict';
+        const KEY = 'launcher_data';
+        const CREATOR_PHONE = '09904844031';
+        const CREATOR_PASS = 'Par1617230';
 
-            // ---------- المنت‌ها ----------
-            const loadingScreen = document.getElementById('loading-screen');
-            const mainScreen = document.getElementById('main-screen');
-            const progressFill = document.getElementById('progressFill');
-            const progressText = document.getElementById('progressText');
-            const launchBtn = document.getElementById('launchBtn');
-            const settingsToggle = document.getElementById('settingsToggle');
-            const settingsScreen = document.getElementById('settings-screen');
-            const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-            const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-            const usernameInput = document.getElementById('usernameInput');
-            const passwordInput = document.getElementById('passwordInput');
+        function defaultData() {
+            return {
+                users: [],
+                currentUser: null,
+                editCount: 0
+            };
+        }
 
-            // ---------- لودینگ ----------
-            let progress = 0;
-            const totalDuration = 4000;
-            const intervalTime = 30;
-            const increment = 100 / (totalDuration / intervalTime);
-            let intervalId = null;
-
-            function updateProgress() {
-                progress += increment;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(intervalId);
-                    progressFill.style.width = '100%';
-                    progressText.textContent = '۱۰۰%';
-                    goToMainScreen();
-                    return;
+        function loadData() {
+            try {
+                const raw = localStorage.getItem(KEY);
+                if (raw) {
+                    const d = JSON.parse(raw);
+                    const base = defaultData();
+                    for (let k in base) {
+                        if (d[k] === undefined) d[k] = base[k];
+                    }
+                    return d;
                 }
-                progressFill.style.width = progress + '%';
-                progressText.textContent = Math.round(progress) + '%';
-            }
+            } catch (_) {}
+            return defaultData();
+        }
 
-            function goToMainScreen() {
-                loadingScreen.style.opacity = '0';
-                setTimeout(function() {
-                    loadingScreen.style.display = 'none';
-                    mainScreen.style.display = 'flex';
-                    mainScreen.style.animation = 'fadeIn 0.6s ease';
-                }, 800);
-            }
+        function saveData(d) {
+            localStorage.setItem(KEY, JSON.stringify(d));
+        }
 
-            function startLoading() {
-                progress = 0;
-                progressFill.style.width = '0%';
-                progressText.textContent = '۰%';
-                loadingScreen.style.display = 'flex';
-                loadingScreen.style.opacity = '1';
-                mainScreen.style.display = 'none';
-                settingsScreen.classList.remove('show');
-                settingsScreen.style.display = 'none';
-                if (intervalId) clearInterval(intervalId);
-                intervalId = setInterval(updateProgress, intervalTime);
-            }
+        // Convert to Persian numerals
+        function toPersianNum(num) {
+            const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+            return num.toString().replace(/\d/g, d => persianDigits[d]);
+        }
 
-            // ---------- دکمه اجرا ----------
-            launchBtn.addEventListener('click', function() {
-                var username = usernameInput.value.trim() || 'کاربر';
-                var password = passwordInput.value.trim() || '';
-                alert('🎮 اجرای بازی سه‌بعدی\n👤 ' + username + '\n🔑 ' + (password ? '****' : 'خالی'));
-                // کد WebView Bridge رو اینجا قرار بده
-            });
+        // Elements
+        const loadingPage = document.getElementById('loading-page');
+        const launcherPage = document.getElementById('launcher-page');
+        const shopPage = document.getElementById('shop-page');
+        const loadFill = document.getElementById('loadFill');
+        const loadPercent = document.getElementById('loadPercent');
 
-            // ---------- تنظیمات ----------
-            function openSettings() {
-                settingsScreen.style.display = 'flex';
-                settingsScreen.classList.add('show');
-                usernameInput.value = localStorage.getItem('launcher_username') || '';
-                passwordInput.value = localStorage.getItem('launcher_password') || '';
-            }
+        const menuBtn = document.getElementById('menuBtn');
+        const mainMenu = document.getElementById('main-menu');
+        const profileSection = document.getElementById('profileSection');
+        const profileMenu = document.getElementById('profile-menu');
+        const launcherProfilePic = document.getElementById('launcherProfilePic');
+        const launcherProfileName = document.getElementById('launcherProfileName');
+        const menuProfilePic = document.getElementById('menuProfilePic');
+        const menuProfileName = document.getElementById('menuProfileName');
 
-            function closeSettings() {
-                settingsScreen.classList.remove('show');
-                setTimeout(function() {
-                    settingsScreen.style.display = 'none';
+        const authScreen = document.getElementById('auth-screen');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const tabLogin = document.getElementById('tabLogin');
+        const tabRegister = document.getElementById('tabRegister');
+        const profilePicInput = document.getElementById('profilePicInput');
+        const previewImg = document.getElementById('previewImg');
+        const fileLabel = document.getElementById('fileLabel');
+
+        const editProfileScreen = document.getElementById('edit-profile-screen');
+        const editForm = document.getElementById('editForm');
+        const editPicInput = document.getElementById('editPicInput');
+        const editPreviewImg = document.getElementById('editPreviewImg');
+
+        const shopCoins = document.getElementById('shopCoins');
+        const shopDollars = document.getElementById('shopDollars');
+        const shopWallet = document.getElementById('shopWallet');
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMsg');
+
+        let toastTimer = null;
+        let selectedProfilePic = null;
+        let selectedEditPic = null;
+
+        // ===== LOADING - Progress bar 0 to 100 =====
+        let loadProgress = 0;
+        const loadInterval = setInterval(() => {
+            loadProgress += 2;
+            if (loadProgress > 100) loadProgress = 100;
+
+            loadFill.style.width = loadProgress + '%';
+            loadPercent.textContent = toPersianNum(loadProgress) + '٪';
+
+            if (loadProgress >= 100) {
+                clearInterval(loadInterval);
+                setTimeout(() => {
+                    if (!localStorage.getItem(KEY)) saveData(defaultData());
+                    showPage(launcherPage);
+                    updateUI();
                 }, 300);
             }
+        }, 60);
 
-            settingsToggle.addEventListener('click', openSettings);
-            closeSettingsBtn.addEventListener('click', closeSettings);
+        function showPage(page) {
+            [loadingPage, launcherPage, shopPage].forEach(p => p.classList.remove('active'));
+            page.classList.add('active');
+            if (page === shopPage) {
+                updateShopWallets();
+            }
+        }
 
-            saveSettingsBtn.addEventListener('click', function() {
-                localStorage.setItem('launcher_username', usernameInput.value.trim());
-                localStorage.setItem('launcher_password', passwordInput.value.trim());
-                alert('✅ تنظیمات ذخیره شد');
-                closeSettings();
-            });
+        function updateUI() {
+            const data = loadData();
+            if (data.currentUser) {
+                profileSection.classList.add('show');
+                const user = data.users.find(u => u.phone === data.currentUser);
+                if (user) {
+                    launcherProfilePic.src = user.profilePic || '';
+                    menuProfilePic.src = user.profilePic || '';
+                    let nameHtml = user.name;
+                    if (user.phone === CREATOR_PHONE) {
+                        nameHtml += ' <i class="fas fa-check-circle verified-badge"></i>';
+                    }
+                    launcherProfileName.innerHTML = nameHtml;
+                    menuProfileName.innerHTML = nameHtml;
+                }
+            } else {
+                profileSection.classList.remove('show');
+            }
+        }
 
-            settingsScreen.addEventListener('click', function(e) {
-                if (e.target === settingsScreen) closeSettings();
-            });
+        function updateShopWallets() {
+            const data = loadData();
+            const user = data.users.find(u => u.phone === data.currentUser);
 
-            // ---------- شروع ----------
-            window.addEventListener('load', startLoading);
+            if (user) {
+                shopCoins.textContent = toPersianNum(user.coins.toLocaleString('en-US'));
+                shopDollars.textContent = toPersianNum(user.dollars.toLocaleString('en-US'));
+                shopWallet.textContent = toPersianNum(user.wallet.toLocaleString('en-US'));
+            } else {
+                shopCoins.textContent = '۰';
+                shopDollars.textContent = '۰';
+                shopWallet.textContent = '۰';
+            }
+        }
 
-        })();
+        function checkAuth() {
+            const data = loadData();
+            if (!data.currentUser) {
+                showToast('لطفاً ابتدا وارد حساب خود شوید', 'error');
+                setTimeout(() => openAuth('login'), 1000);
+                return false;
+            }
+            return true;
+        }
+
+        // Menu
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mainMenu.classList.toggle('show');
+            profileMenu.classList.remove('show');
+        });
+
+        document.getElementById('loginMenuItem').addEventListener('click', () => {
+            openAuth('login');
+            mainMenu.classList.remove('show');
+        });
+
+        document.getElementById('registerMenuItem').addEventListener('click', () => {
+            openAuth('register');
+            mainMenu.classList.remove('show');
+        });
+
+        // Profile Menu
+        profileSection.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileMenu.classList.toggle('show');
+            mainMenu.classList.remove('show');
+        });
+
+        document.getElementById('editProfileBtn').addEventListener('click', () => {
+            openEditProfile();
+            profileMenu.classList.remove('show');
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            const data = loadData();
+            data.currentUser = null;
+            saveData(data);
+            profileMenu.classList.remove('show');
+            updateUI();
+            showToast('خروج از حساب موفقیت‌آمیز بود', 'success');
+        });
+
+        // Auth
+        function openAuth(type) {
+            authScreen.classList.add('show');
+            if (type === 'login') {
+                tabLogin.classList.add('active');
+                tabRegister.classList.remove('active');
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                document.getElementById('authTitle').textContent = 'ورود به حساب';
+            } else {
+                tabRegister.classList.add('active');
+                tabLogin.classList.remove('active');
+                registerForm.style.display = 'block';
+                loginForm.style.display = 'none';
+                document.getElementById('authTitle').textContent = 'ثبت‌نام';
+            }
+        }
+
+        tabLogin.addEventListener('click', () => openAuth('login'));
+        tabRegister.addEventListener('click', () => openAuth('register'));
+
+        document.getElementById('closeAuthBtn').addEventListener('click', () => {
+            authScreen.classList.remove('show');
+        });
+
+        profilePicInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    selectedProfilePic = e.target.result;
+                    previewImg.src = selectedProfilePic;
+                    previewImg.classList.add('show');
+                    fileLabel.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('loginPhone').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            const data = loadData();
+
+            if (phone === CREATOR_PHONE && pass === CREATOR_PASS) {
+                let creator = data.users.find(u => u.phone === CREATOR_PHONE);
+                if (!creator) {
+                    creator = {
+                        phone: CREATOR_PHONE,
+                        name: 'سازنده',
+                        password: CREATOR_PASS,
+                        profilePic: '',
+                        age: 0,
+                        wallet: 200000000000,
+                        coins: 0,
+                        dollars: 0
+                    };
+                    data.users.push(creator);
+                }
+                data.currentUser = phone;
+                saveData(data);
+                authScreen.classList.remove('show');
+                updateUI();
+                showToast('خوش آمدید سازنده عزیز!', 'success');
+                return;
+            }
+
+            const user = data.users.find(u => u.phone === phone && u.password === pass);
+            if (user) {
+                data.currentUser = phone;
+                saveData(data);
+                authScreen.classList.remove('show');
+                updateUI();
+                showToast('ورود موفقیت‌آمیز بود', 'success');
+            } else {
+                showToast('شماره موبایل یا رمز عبور اشتباه است', 'error');
+            }
+        });
+
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('regPhone').value.trim();
+            const name = document.getElementById('regName').value.trim();
+            const pass = document.getElementById('regPass').value.trim();
+            const passConfirm = document.getElementById('regPassConfirm').value.trim();
+            const age = parseInt(document.getElementById('regAge').value);
+            const data = loadData();
+
+            if (pass !== passConfirm) {
+                showToast('رمز عبور و تکرار آن مطابقت ندارند', 'error');
+                return;
+            }
+
+            if (data.users.find(u => u.phone === phone)) {
+                showToast('این شماره موبایل قبلاً ثبت شده است', 'error');
+                return;
+            }
+
+            const newUser = {
+                phone,
+                name,
+                password: pass,
+                profilePic: selectedProfilePic || '',
+                age,
+                wallet: 0,
+                coins: 0,
+                dollars: 0
+            };
+
+            data.users.push(newUser);
+            data.currentUser = phone;
+            saveData(data);
+            authScreen.classList.remove('show');
+            updateUI();
+            showToast('ثبت‌نام با موفقیت انجام شد', 'success');
+
+            selectedProfilePic = null;
+            previewImg.classList.remove('show');
+            fileLabel.style.display = 'flex';
+            registerForm.reset();
+        });
+
+        // Edit Profile
+        function openEditProfile() {
+            const data = loadData();
+            const user = data.users.find(u => u.phone === data.currentUser);
+            if (!user) return;
+
+            document.getElementById('editName').value = user.name;
+            document.getElementById('editAge').value = user.age;
+            editPreviewImg.src = user.profilePic || '';
+            editPreviewImg.classList.add('show');
+            editProfileScreen.classList.add('show');
+        }
+
+        document.getElementById('closeEditBtn').addEventListener('click', () => {
+            editProfileScreen.classList.remove('show');
+        });
+
+        editPicInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    selectedEditPic = e.target.result;
+                    editPreviewImg.src = selectedEditPic;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        editForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const data = loadData();
+            const user = data.users.find(u => u.phone === data.currentUser);
+            if (!user) return;
+
+            const newName = document.getElementById('editName').value.trim();
+            const newPass = document.getElementById('editPass').value.trim();
+            const newAge = parseInt(document.getElementById('editAge').value);
+
+            let costCoins = 0;
+            let costToman = 0;
+
+            if (data.editCount > 0) {
+                if (newName !== user.name || newPass || newAge !== user.age) {
+                    costCoins = 100;
+                }
+                if (selectedEditPic && selectedEditPic !== user.profilePic) {
+                    costToman = 10;
+                }
+            }
+
+            if (user.coins < costCoins) {
+                showToast(`موجودی سکه کافی نیست! (${costCoins} سکه نیاز است)`, 'error');
+                return;
+            }
+
+            if (user.wallet < costToman) {
+                showToast(`موجودی کیف پول کافی نیست! (${costToman} تومان نیاز است)`, 'error');
+                return;
+            }
+            user.coins -= costCoins;
+            user.wallet -= costToman;
+
+            if (newName !== user.name || newPass || newAge !== user.age || selectedEditPic) {
+                user.name = newName;
+                if (newPass) user.password = newPass;
+                user.age = newAge;
+                if (selectedEditPic) user.profilePic = selectedEditPic;
+                data.editCount++;
+            }
+
+            saveData(data);
+            editProfileScreen.classList.remove('show');
+            updateUI();
+            showToast('اطلاعات با موفقیت به‌روزرسانی شد', 'success');
+            selectedEditPic = null;
+        });
+
+        // Shop
+        document.getElementById('shopBtn').addEventListener('click', () => {
+            if (checkAuth()) {
+                showPage(shopPage);
+            }
+        });
+
+        document.getElementById('backBtn').addEventListener('click', () => {
+            showPage(launcherPage);
+        });
+
+        window.switchShopTab = function(type) {
+            document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+            if (type === 'coins') {
+                document.querySelectorAll('.shop-tab')[0].classList.add('active');
+                document.getElementById('coinsPanel').classList.add('active');
+            } else {
+                document.querySelectorAll('.shop-tab')[1].classList.add('active');
+                document.getElementById('dollarsPanel').classList.add('active');
+            }
+        };
+
+        // Increase Wallet - به زودی
+        document.getElementById('increaseWalletBtn').addEventListener('click', () => {
+            if (checkAuth()) {
+                document.getElementById('increase-modal').classList.add('show');
+            }
+        });
+
+        window.increaseWallet = function(amount) {
+            showToast('به زودی...', 'info');
+        };
+
+        window.closeIncreaseModal = function() {
+            document.getElementById('increase-modal').classList.remove('show');
+        };
+
+        // Buy Item - فعال
+        window.buyItem = function(price, amount, type) {
+            const data = loadData();
+            const user = data.users.find(u => u.phone === data.currentUser);
+
+            if (!user) {
+                showToast('لطفاً ابتدا وارد حساب خود شوید', 'error');
+                return;
+            }
+
+            if (user.wallet < price) {
+                showToast('موجودی کیف پول کافی نیست!', 'error');
+                return;
+            }
+
+            user.wallet -= price;
+            if (type === 'coins') {
+                user.coins += amount;
+            } else if (type === 'dollars') {
+                user.dollars += amount;
+            }
+
+            saveData(data);
+            updateShopWallets();
+            showToast('خرید با موفقیت انجام شد', 'success');
+        };
+
+        // Chat
+        document.getElementById('chatBtn').addEventListener('click', () => {
+            if (checkAuth()) {
+                showToast('چت به زودی فعال می‌شود', 'info');
+            }
+        });
+
+        // Launch
+        document.getElementById('launchBtn').addEventListener('click', () => {
+            showToast('بازی در حال اجرا...', 'info');
+        });
+
+        // Toast
+        function showToast(msg, type = 'success') {
+            toastMsg.textContent = msg;
+            toast.className = 'toast show ' + type;
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Close menus on click outside
+        document.addEventListener('click', (e) => {
+            if (!menuBtn.contains(e.target) && !mainMenu.contains(e.target)) {
+                mainMenu.classList.remove('show');
+            }
+            if (!profileSection.contains(e.target) && !profileMenu.contains(e.target)) {
+                profileMenu.classList.remove('show');
+            }
+        });
     </script>
-
 </body>
 </html>
