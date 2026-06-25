@@ -1,2614 +1,2303 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>کبیر - پیام‌رسان</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js">
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>کبیر - پیام‌رسان</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js">
+  </script>
 </head>
 <style>
-/* ===== ادامه استایل‌های لانچر (همان‌هایی که قبلاً بود) ===== */
+/* ===== RESET & BASE ===== */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-    user-select: none;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  user-select: none;
 }
-
-.launcher-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    max-width: 430px;
-    max-height: 932px;
-    background: #000;
-    overflow: hidden;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+.app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  max-width: 430px;
+  max-height: 932px;
+  background: #000;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
 }
-
 .page {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: none;
-    flex-direction: column;
-    z-index: 5;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  flex-direction: column;
+  z-index: 5;
 }
 .page.active {
-    display: flex;
+  display: flex;
+}
+.bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+.loading-overlay,
+.page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  z-index: 1;
+}
+.page::before {
+  background: rgba(0, 0, 0, 0.4);
 }
 
 /* ===== LOADING ===== */
-#loading-page {
-    background: #0a0a14;
-    justify-content: center;
-    align-items: center;
-    z-index: 20;
-    position: relative;
-}
-#loading-page .bg-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    z-index: 0;
-    pointer-events: none;
-}
-.loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.35);
-    z-index: 1;
+#loadingPage {
+  background: #0a0a14;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  position: relative;
 }
 .loading-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-    padding: 0 30px 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 0 30px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 .loading-percent {
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: 700;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-    letter-spacing: 2px;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  letter-spacing: 2px;
 }
 .loading-bar-container {
-    width: 100%;
-    max-width: 300px;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 300px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  overflow: hidden;
 }
 .loading-bar-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24);
-    background-size: 200% 100%;
-    border-radius: 10px;
-    transition: width 0.1s linear;
-    animation: shimmer 2s linear infinite;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24);
+  background-size: 200% 100%;
+  border-radius: 10px;
+  transition: width 0.1s linear;
+  animation: shimmer 2s linear infinite;
 }
 @keyframes shimmer {
-    0% {
-        background-position: 200% 0;
-    }
-    100% {
-        background-position: -200% 0;
-    }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* ===== LAUNCHER ===== */
 #launcher-page {
-    background: #1a1a2e;
-    position: relative;
+  background: #1a1a2e;
+  position: relative;
 }
-#launcher-page .bg-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    z-index: 0;
-    pointer-events: none;
-}
-#launcher-page::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.25);
-    pointer-events: none;
-    z-index: 1;
-}
-
 .launcher-top {
-    position: relative;
-    z-index: 10;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  position: relative;
+  z-index: 10;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .menu-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(12px);
-    border: 1.5px solid rgba(255, 255, 255, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.25s ease;
 }
 .menu-btn:active {
-    transform: scale(0.88);
+  transform: scale(0.88);
 }
 .menu-btn i {
-    color: #fff;
-    font-size: 1.2rem;
+  color: #fff;
+  font-size: 1.2rem;
 }
 .profile-section {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 6px 14px;
-    border-radius: 30px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    cursor: pointer;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 14px;
+  border-radius: 30px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
 }
 .profile-section.show {
-    display: flex;
+  display: flex;
 }
 .profile-pic {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(255, 255, 255, 0.5);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.5);
 }
 .profile-name {
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 .verified-badge {
-    color: #3b82f6;
-    font-size: 0.9rem;
+  color: #3b82f6;
+  font-size: 0.9rem;
 }
-
 .launcher-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-    padding: 0 25px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 0 25px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.btn-shop-green {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #34d399, #059669);
-    border: none;
-    box-shadow: 0 0 25px rgba(52, 211, 153, 0.5), 0 5px 20px rgba(0, 0, 0, 0.4);
-    cursor: pointer;
-    transition: all 0.25s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-size: 1.5rem;
+.btn-shop {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #34d399, #059669);
+  border: none;
+  box-shadow: 0 0 25px rgba(52, 211, 153, 0.5);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 1.5rem;
+  transition: transform 0.25s ease;
 }
-.btn-shop-green:active {
-    transform: scale(0.9);
+.btn-shop:active {
+  transform: scale(0.9);
 }
 .btn-launch {
-    width: 85px;
-    height: 85px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #ff5a5a, #dc2626);
-    border: none;
-    box-shadow: 0 0 35px rgba(220, 38, 38, 0.5), 0 8px 25px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    animation: pulse 2.5s ease-in-out infinite;
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff5a5a, #dc2626);
+  border: none;
+  box-shadow: 0 0 35px rgba(220, 38, 38, 0.5);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  animation: pulse 2.5s ease-in-out infinite;
+  transition: transform 0.25s ease;
 }
 .btn-launch:active {
-    transform: scale(0.9);
+  transform: scale(0.9);
 }
 .btn-launch i {
-    color: #fff;
-    font-size: 2rem;
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+  color: #fff;
+  font-size: 2rem;
 }
 .btn-launch span {
-    color: #fff;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 .btn-chat {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #60a5fa, #2563eb);
-    border: none;
-    box-shadow: 0 0 25px rgba(96, 165, 250, 0.5), 0 5px 20px rgba(0, 0, 0, 0.4);
-    cursor: pointer;
-    transition: all 0.25s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-size: 1.5rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #60a5fa, #2563eb);
+  border: none;
+  box-shadow: 0 0 25px rgba(96, 165, 250, 0.5);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 1.5rem;
+  transition: transform 0.25s ease;
 }
 .btn-chat:active {
-    transform: scale(0.9);
+  transform: scale(0.9);
 }
 @keyframes pulse {
-    0%,
-    100% {
-        box-shadow: 0 0 25px rgba(220, 38, 38, 0.4), 0 8px 25px rgba(0, 0, 0, 0.5);
-    }
-    50% {
-        box-shadow: 0 0 45px rgba(220, 38, 38, 0.7), 0 8px 30px rgba(0, 0, 0, 0.6);
-    }
+  0%,
+  100% {
+    box-shadow: 0 0 25px rgba(220, 38, 38, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(220, 38, 38, 0.7);
+  }
 }
 
-/* ===== MENUS ===== */
-#main-menu,
-#profile-menu {
-    position: absolute;
-    z-index: 20;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    display: none;
+/* ===== DROPDOWN ===== */
+.dropdown {
+  position: absolute;
+  top: 70px;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  display: none;
+  min-width: 200px;
 }
-#main-menu {
-    top: 70px;
-    left: 20px;
-    min-width: 200px;
+#mainMenu {
+  left: 20px;
 }
-#profile-menu {
-    top: 70px;
-    right: 20px;
-    min-width: 220px;
+#profileMenu {
+  right: 20px;
+  min-width: 220px;
 }
-#main-menu.show,
-#profile-menu.show {
-    display: block;
-    animation: slideDown 0.3s ease;
+.dropdown.show {
+  display: block;
+  animation: slideDown 0.3s ease;
 }
 @keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .menu-item {
-    padding: 12px 20px;
-    color: #fff;
-    cursor: pointer;
-    border-radius: 12px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 600;
+  padding: 12px 15px;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
 }
 .menu-item:hover {
-    background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 .menu-item i {
-    width: 24px;
-    text-align: center;
+  width: 24px;
+  text-align: center;
 }
 .profile-menu-header {
-    text-align: center;
-    padding: 10px 0 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 10px;
+  text-align: center;
+  padding: 10px 0 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
 }
 .profile-menu-pic {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    margin-bottom: 10px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 10px;
 }
 .profile-menu-name {
-    color: #fff;
-    font-weight: 700;
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-}
-.profile-menu-item {
-    padding: 12px 15px;
-    color: #fff;
-    cursor: pointer;
-    border-radius: 12px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-weight: 500;
-}
-.profile-menu-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-.profile-menu-item i {
-    color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 /* ===== AUTH / EDIT ===== */
-#auth-screen,
-#edit-profile-screen {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(20px);
-    z-index: 50;
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 30px 24px;
-    overflow-y: auto;
+#authScreen,
+#editProfileScreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  z-index: 50;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 24px;
+  overflow-y: auto;
 }
-#auth-screen.show,
-#edit-profile-screen.show {
-    display: flex;
+#authScreen.show,
+#editProfileScreen.show {
+  display: flex;
 }
 .auth-card {
-    background: linear-gradient(145deg, rgba(30, 25, 35, 0.98), rgba(20, 15, 25, 0.95));
-    border-radius: 32px;
-    padding: 35px 28px;
-    width: 100%;
-    max-width: 400px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7);
+  background: linear-gradient(145deg, rgba(30, 25, 35, 0.98), rgba(20, 15, 25, 0.95));
+  border-radius: 32px;
+  padding: 35px 28px;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7);
 }
 .auth-card h2 {
-    color: #fff;
-    font-size: 1.8rem;
-    text-align: center;
-    margin-bottom: 30px;
-    font-weight: 700;
+  color: #fff;
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 700;
 }
 .auth-tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
 }
 .auth-tab {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-family: inherit;
-    font-size: 0.95rem;
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: inherit;
+  font-size: 0.95rem;
 }
 .auth-tab.active {
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #1a1a1a;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #1a1a1a;
 }
 .form-group {
-    margin-bottom: 18px;
+  margin-bottom: 18px;
 }
 .form-group label {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.85rem;
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.85rem;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
 }
 .form-group input,
 .form-group textarea,
 .form-group select {
-    width: 100%;
-    padding: 14px 18px;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    font-size: 0.95rem;
-    outline: none;
-    transition: all 0.3s;
-    font-family: inherit;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.3s;
+  font-family: inherit;
 }
 .form-group input:focus,
 .form-group textarea:focus {
-    border-color: #fbbf24;
-    background: rgba(255, 255, 255, 0.08);
+  border-color: #fbbf24;
+  background: rgba(255, 255, 255, 0.08);
 }
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-    color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.3);
 }
 .file-input-wrapper {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-    width: 100%;
+  position: relative;
+  width: 100%;
 }
 .file-input-wrapper input[type=file] {
-    position: absolute;
-    left: -9999px;
+  position: absolute;
+  left: -9999px;
 }
 .file-input-label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 14px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px dashed rgba(255, 255, 255, 0.2);
-    border-radius: 14px;
-    color: rgba(255, 255, 255, 0.7);
-    cursor: pointer;
-    transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.3s;
 }
 .file-input-label:hover {
-    border-color: #fbbf24;
-    background: rgba(255, 255, 255, 0.08);
+  border-color: #fbbf24;
+  background: rgba(255, 255, 255, 0.08);
 }
 .preview-img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 14px;
-    display: none;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 14px;
+  display: none;
 }
 .preview-img.show {
-    display: block;
+  display: block;
 }
 .btn-submit {
-    width: 100%;
-    padding: 16px;
-    border: none;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #1a1a1a;
-    font-size: 1.05rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
-    margin-top: 10px;
-    font-family: inherit;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #1a1a1a;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.3s;
+  margin-top: 10px;
+  font-family: inherit;
 }
 .btn-submit:active {
-    transform: scale(0.97);
+  transform: scale(0.97);
 }
-.btn-close-auth {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    margin-top: 12px;
-    font-family: inherit;
+.btn-close {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 12px;
+  font-family: inherit;
 }
-.btn-close-auth:active {
-    background: rgba(255, 255, 255, 0.15);
+.btn-close:active {
+  background: rgba(255, 255, 255, 0.15);
 }
 .price-tag {
-    background: rgba(251, 191, 36, 0.2);
-    color: #fbbf24;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 700;
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
 /* ===== SHOP ===== */
 #shop-page {
-    background: #1a1a2e;
-    position: relative;
-}
-#shop-page .bg-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    z-index: 0;
-    pointer-events: none;
-}
-#shop-page::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    pointer-events: none;
-    z-index: 1;
+  background: #1a1a2e;
+  position: relative;
 }
 .shop-header {
-    position: relative;
-    z-index: 10;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 10;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
 }
 .back-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1.5px solid rgba(255, 255, 255, 0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.25s ease;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.25s ease;
 }
 .back-btn:active {
-    transform: scale(0.88);
+  transform: scale(0.88);
 }
 .back-btn i {
-    color: #fff;
-    font-size: 1.2rem;
+  color: #fff;
+  font-size: 1.2rem;
 }
 .shop-title {
-    color: #fff;
-    font-size: 1.4rem;
-    font-weight: 800;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 .wallet-section {
-    position: relative;
-    z-index: 10;
-    padding: 0 20px 20px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+  position: relative;
+  z-index: 10;
+  padding: 0 20px 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
 }
 .wallet-card {
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 15px 10px;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    cursor: pointer;
-    transition: all 0.3s;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 15px 10px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s;
 }
 .wallet-card:active {
-    transform: scale(0.95);
+  transform: scale(0.95);
 }
 .wallet-card i {
-    font-size: 1.8rem;
-    margin-bottom: 8px;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
 }
 .wallet-card.coins i {
-    color: #fbbf24;
+  color: #fbbf24;
 }
 .wallet-card.dollars i {
-    color: #34d399;
+  color: #34d399;
 }
 .wallet-card.toman i {
-    color: #60a5fa;
+  color: #60a5fa;
 }
 .wallet-card .amount {
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 800;
-    margin-bottom: 4px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 4px;
 }
 .wallet-card .label {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.7rem;
 }
 .shop-tabs {
-    position: relative;
-    z-index: 10;
-    padding: 0 20px 15px;
-    display: flex;
-    gap: 10px;
+  position: relative;
+  z-index: 10;
+  padding: 0 20px 15px;
+  display: flex;
+  gap: 10px;
 }
 .shop-tab {
-    flex: 1;
-    padding: 12px;
-    border: none;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: inherit;
-    font-size: 0.9rem;
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
 }
 .shop-tab.active {
-    background: rgba(251, 191, 36, 0.3);
-    color: #fbbf24;
-    border: 1px solid rgba(251, 191, 36, 0.5);
+  background: rgba(251, 191, 36, 0.3);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.5);
 }
 .shop-content {
-    position: relative;
-    z-index: 10;
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 20px 30px;
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px 30px;
 }
 .tab-panel {
-    display: none;
+  display: none;
 }
 .tab-panel.active {
-    display: block;
-    animation: fadeIn 0.3s ease;
+  display: block;
+  animation: fadeIn 0.3s ease;
 }
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .product-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
 }
 .product-card {
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 14px;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s;
-}
-.product-card:active {
-    transform: scale(0.97);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 14px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .product-card img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-    margin-bottom: 10px;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 10px;
 }
 .product-card .name {
-    color: #fff;
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin-bottom: 8px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 .product-card .price {
-    color: #fbbf24;
-    font-size: 0.9rem;
-    font-weight: 800;
-    margin-bottom: 10px;
+  color: #fbbf24;
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-bottom: 10px;
 }
 .product-card .price small {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.7rem;
-    font-weight: 400;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.7rem;
+  font-weight: 400;
 }
 .buy-btn {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #1a1a1a;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
-    font-size: 0.85rem;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #1a1a1a;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s;
+  font-family: inherit;
+  font-size: 0.85rem;
 }
 .buy-btn:active {
-    transform: scale(0.95);
-}
-.buy-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  transform: scale(0.95);
 }
 
-/* ===== INCREASE MODAL ===== */
-#increase-modal {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    backdrop-filter: blur(20px);
-    z-index: 100;
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 30px 24px;
-}
-#increase-modal.show {
-    display: flex;
-}
+/* ===== MODALS (generic) ===== */
 .modal-card {
-    background: linear-gradient(145deg, rgba(30, 25, 35, 0.98), rgba(20, 15, 25, 0.95));
-    border-radius: 32px;
-    padding: 35px 28px;
-    width: 100%;
-    max-width: 400px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7);
+  background: linear-gradient(145deg, rgba(30, 25, 35, 0.98), rgba(20, 15, 25, 0.95));
+  border-radius: 32px;
+  padding: 35px 28px;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7);
 }
-.modal-card h2 {
-    color: #fff;
-    font-size: 1.6rem;
-    text-align: center;
-    margin-bottom: 25px;
-    font-weight: 700;
+.modal-card h3 {
+  color: #fff;
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 700;
 }
-.increase-options {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-bottom: 25px;
+#giftModal,
+#reportModal,
+#deleteModal,
+#blockModal,
+#roomMenuModal,
+#banModal,
+#increaseModal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(20px);
+  z-index: 60;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 24px;
 }
-.increase-option {
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s;
+#giftModal.show,
+#reportModal.show,
+#deleteModal.show,
+#blockModal.show,
+#roomMenuModal.show,
+#banModal.show,
+#increaseModal.show {
+  display: flex;
 }
-.increase-option:active {
-    transform: scale(0.95);
-    border-color: #fbbf24;
-    background: rgba(251, 191, 36, 0.1);
+.option {
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.increase-option .amount-text {
-    color: #fff;
-    font-size: 1.3rem;
-    font-weight: 800;
-    margin-bottom: 5px;
+.option:active {
+  background: rgba(255, 255, 255, 0.12);
 }
-.increase-option .to-text {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.8rem;
-}
-.btn-close-modal {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-family: inherit;
-}
-.btn-close-modal:active {
-    background: rgba(255, 255, 255, 0.15);
+.option.selected {
+  border-color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
 }
 
 /* ===== MESSENGER ===== */
 #messenger-page {
-    background: #1a1a2e;
-    position: relative;
-}
-#messenger-page .bg-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    z-index: 0;
-    pointer-events: none;
-}
-#messenger-page::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    pointer-events: none;
-    z-index: 1;
+  background: #1a1a2e;
+  position: relative;
 }
 .messenger-container {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    padding: 10px 12px;
-    overflow: hidden;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px 12px;
+  overflow: hidden;
 }
 .messenger-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 5px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 5px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
 }
 .messenger-title {
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: 700;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 .messenger-actions {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
 .messenger-actions i {
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    font-size: 1rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1rem;
 }
 .search-container {
-    padding: 10px 5px;
-    flex-shrink: 0;
+  padding: 10px 5px;
+  flex-shrink: 0;
 }
 .search-container input {
-    width: 100%;
-    padding: 11px 16px;
-    border-radius: 30px;
-    border: none;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    color: #fff;
-    font-size: 0.95rem;
-    outline: none;
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 30px;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
 }
 .search-container input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.5);
 }
 .search-tabs {
-    display: flex;
-    gap: 6px;
-    padding: 0 5px 10px;
-    flex-shrink: 0;
-    overflow-x: auto;
+  display: flex;
+  gap: 6px;
+  padding: 0 5px 10px;
+  flex-shrink: 0;
+  overflow-x: auto;
 }
 .search-tab {
-    padding: 7px 14px;
-    border: none;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-family: inherit;
-    white-space: nowrap;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: inherit;
+  white-space: nowrap;
 }
 .search-tab.active {
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #1a1a1a;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #1a1a1a;
 }
 .chat-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 5px 0;
+  flex: 1;
+  overflow-y: auto;
+  padding: 5px 0;
 }
 .chat-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 10px;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(8px);
-    margin-bottom: 8px;
-    cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: transform 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 10px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  margin-bottom: 8px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.15s;
 }
 .chat-item:active {
-    transform: scale(0.97);
-    background: rgba(255, 255, 255, 0.15);
+  transform: scale(0.97);
+  background: rgba(255, 255, 255, 0.15);
 }
 .chat-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: 700;
-    flex-shrink: 0;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    overflow: hidden;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
 }
 .chat-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .chat-info {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 .chat-name {
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .chat-last {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.82rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-top: 2px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.82rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
 }
 .chat-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
-    flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
 }
 .chat-time {
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.7rem;
 }
 .chat-type {
-    font-size: 0.65rem;
-    color: #fbbf24;
-    background: rgba(251, 191, 36, 0.15);
-    padding: 2px 7px;
-    border-radius: 10px;
-    font-weight: 600;
+  font-size: 0.65rem;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.15);
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 600;
 }
 
 /* ===== CHAT ROOM ===== */
-#chat-room {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #0a0a14;
-    z-index: 40;
-    display: none;
-    flex-direction: column;
+#chatRoom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #0a0a14;
+  z-index: 40;
+  display: none;
+  flex-direction: column;
 }
-#chat-room.active {
-    display: flex;
-}
-#chat-room .bg-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    z-index: 0;
-    pointer-events: none;
-}
-#chat-room::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    pointer-events: none;
-    z-index: 1;
+#chatRoom.active {
+  display: flex;
 }
 .chat-room-header {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
 }
-.chat-room-header .room-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-weight: 700;
-    flex-shrink: 0;
-    overflow: hidden;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+.room-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.2);
 }
-.chat-room-header .room-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.room-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.chat-room-header .room-info {
-    flex: 1;
-    cursor: pointer;
-    min-width: 0;
+.room-info {
+  flex: 1;
+  cursor: pointer;
+  min-width: 0;
 }
-.chat-room-header .room-name {
-    color: #fff;
-    font-weight: 700;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.room-name {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.chat-room-header .room-status {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.75rem;
+.room-status {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
 }
-.chat-room-header .room-actions {
-    display: flex;
-    gap: 12px;
-    color: #fff;
-    font-size: 1.1rem;
+.room-actions {
+  display: flex;
+  gap: 12px;
+  color: #fff;
+  font-size: 1.1rem;
 }
-.chat-room-header .room-actions i {
-    cursor: pointer;
-    padding: 4px;
+.room-actions i {
+  cursor: pointer;
+  padding: 4px;
 }
 .messages-area {
-    position: relative;
-    z-index: 10;
-    flex: 1;
-    overflow-y: auto;
-    padding: 14px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 .msg {
-    max-width: 82%;
-    padding: 9px 13px;
-    border-radius: 18px;
-    font-size: 0.93rem;
-    line-height: 1.45;
-    word-wrap: break-word;
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    position: relative;
+  max-width: 82%;
+  padding: 9px 13px;
+  border-radius: 18px;
+  font-size: 0.93rem;
+  line-height: 1.45;
+  word-wrap: break-word;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
 }
 .msg.sent {
-    align-self: flex-end;
-    background: rgba(30, 147, 240, 0.28);
-    border-bottom-right-radius: 4px;
+  align-self: flex-end;
+  background: rgba(30, 147, 240, 0.28);
+  border-bottom-right-radius: 4px;
 }
 .msg.received {
-    align-self: flex-start;
-    background: rgba(255, 255, 255, 0.1);
-    border-bottom-left-radius: 4px;
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom-left-radius: 4px;
 }
 .msg .sender {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: #60a5fa;
-    margin-bottom: 3px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #60a5fa;
+  margin-bottom: 3px;
 }
 .msg .text {
-    color: #fff;
-    white-space: pre-wrap;
+  color: #fff;
+  white-space: pre-wrap;
 }
 .msg .time {
-    font-size: 0.68rem;
-    color: rgba(255, 255, 255, 0.4);
-    margin-top: 3px;
-    text-align: left;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 3px;
+  text-align: left;
 }
 .msg.system {
-    align-self: center;
-    background: rgba(0, 0, 0, 0.5);
-    color: rgba(255, 255, 255, 0.75);
-    padding: 5px 13px;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    text-align: center;
-    border: none;
-    max-width: 90%;
+  align-self: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.75);
+  padding: 5px 13px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  text-align: center;
+  border: none;
+  max-width: 90%;
 }
 .msg .image {
-    max-width: 100%;
-    border-radius: 12px;
-    margin-top: 5px;
-    cursor: pointer;
-    display: block;
+  max-width: 100%;
+  border-radius: 12px;
+  margin-top: 5px;
+  cursor: pointer;
+  display: block;
 }
 .msg .video {
-    max-width: 100%;
-    border-radius: 12px;
-    margin-top: 5px;
+  max-width: 100%;
+  border-radius: 12px;
+  margin-top: 5px;
 }
 .msg .audio {
-    margin-top: 5px;
-    width: 100%;
-    max-width: 260px;
-    height: 36px;
+  margin-top: 5px;
+  width: 100%;
+  max-width: 260px;
+  height: 36px;
 }
 .msg .file-attach {
-    margin-top: 5px;
-    padding: 10px 12px;
-    background: rgba(0, 0, 0, 0.35);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #93c5fd;
-    cursor: pointer;
-    text-decoration: none;
+  margin-top: 5px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #93c5fd;
+  cursor: pointer;
+  text-decoration: none;
 }
 .msg .file-attach i.fa-file {
-    font-size: 1.6rem;
+  font-size: 1.6rem;
 }
 .msg .file-info {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 .msg .file-name {
-    font-size: 0.82rem;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #fff;
 }
 .msg .file-size {
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.5);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.5);
 }
 .msg .gift-box {
-    margin-top: 6px;
-    padding: 14px;
-    background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.2));
-    border: 1px solid rgba(251, 191, 36, 0.5);
-    border-radius: 16px;
-    text-align: center;
+  margin-top: 6px;
+  padding: 14px;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.2));
+  border: 1px solid rgba(251, 191, 36, 0.5);
+  border-radius: 16px;
+  text-align: center;
 }
 .msg .gift-icon {
-    font-size: 2.2rem;
-    margin-bottom: 4px;
+  font-size: 2.2rem;
+  margin-bottom: 4px;
 }
 .msg .gift-amount {
-    color: #fbbf24;
-    font-size: 1.1rem;
-    font-weight: 800;
+  color: #fbbf24;
+  font-size: 1.1rem;
+  font-weight: 800;
 }
 .msg .gift-reason {
-    color: rgba(255, 255, 255, 0.75);
-    font-size: 0.78rem;
-    margin-top: 3px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.78rem;
+  margin-top: 3px;
 }
 .msg .gift-btn {
-    margin-top: 10px;
-    padding: 8px 20px;
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #1a1a1a;
-    border: none;
-    border-radius: 20px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
+  margin-top: 10px;
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #1a1a1a;
+  border: none;
+  border-radius: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
 }
 .msg .gift-status {
-    color: #22c55e;
-    font-size: 0.82rem;
-    margin-top: 8px;
-    font-weight: 600;
+  color: #22c55e;
+  font-size: 0.82rem;
+  margin-top: 8px;
+  font-weight: 600;
 }
 .msg .gift-expired {
-    color: #ef4444;
-    font-size: 0.82rem;
-    margin-top: 8px;
-    font-weight: 600;
+  color: #ef4444;
+  font-size: 0.82rem;
+  margin-top: 8px;
+  font-weight: 600;
 }
 .msg .deleted-text {
-    color: rgba(255, 255, 255, 0.45);
-    font-style: italic;
-    font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-style: italic;
+  font-size: 0.85rem;
 }
 .msg .deleted-badge {
-    position: absolute;
-    top: -8px;
-    right: 10px;
-    background: #ef4444;
-    color: #fff;
-    font-size: 0.62rem;
-    padding: 2px 7px;
-    border-radius: 10px;
-    font-weight: 700;
+  position: absolute;
+  top: -8px;
+  right: 10px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.62rem;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 700;
 }
 .msg .actions {
-    display: flex;
-    gap: 6px;
-    margin-top: 6px;
-    padding-top: 5px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    font-size: 0.78rem;
-    color: rgba(255, 255, 255, 0.55);
-    flex-wrap: wrap;
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+  flex-wrap: wrap;
 }
 .msg .actions span {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    padding: 3px 7px;
-    border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 7px;
+  border-radius: 10px;
 }
 .msg .actions span:active {
-    background: rgba(255, 255, 255, 0.1);
-}
-.msg .actions i {
-    font-size: 0.72rem;
+  background: rgba(255, 255, 255, 0.1);
 }
 .chat-footer {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 10px;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
 }
 .chat-footer input[type=text] {
-    flex: 1;
-    padding: 9px 14px;
-    border-radius: 30px;
-    border: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    font-size: 0.92rem;
-    outline: none;
-    font-family: inherit;
+  flex: 1;
+  padding: 9px 14px;
+  border-radius: 30px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 0.92rem;
+  outline: none;
+  font-family: inherit;
 }
 .chat-footer input[type=text]::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.4);
 }
 .chat-footer .fbtn {
-    color: #fff;
-    font-size: 1.15rem;
-    cursor: pointer;
-    padding: 7px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  color: #fff;
+  font-size: 1.15rem;
+  cursor: pointer;
+  padding: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 .chat-footer .fbtn.send {
-    background: #1e93f0;
+  background: #1e93f0;
 }
 .voice-recorder {
-    display: none;
-    position: absolute;
-    bottom: 60px;
-    left: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.92);
-    backdrop-filter: blur(10px);
-    padding: 12px;
-    border-radius: 18px;
-    z-index: 20;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    align-items: center;
-    gap: 8px;
+  display: none;
+  position: absolute;
+  bottom: 60px;
+  left: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(10px);
+  padding: 12px;
+  border-radius: 18px;
+  z-index: 20;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  align-items: center;
+  gap: 8px;
 }
 .voice-recorder.show {
-    display: flex;
+  display: flex;
 }
 .voice-wave {
-    flex: 1;
-    height: 30px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ef4444;
-    font-size: 0.85rem;
-    gap: 6px;
-    padding: 0 10px;
+  flex: 1;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef4444;
+  font-size: 0.85rem;
+  gap: 6px;
+  padding: 0 10px;
 }
 .rec-dot {
-    width: 8px;
-    height: 8px;
-    background: #ef4444;
-    border-radius: 50%;
-    animation: blink 1s infinite;
+  width: 8px;
+  height: 8px;
+  background: #ef4444;
+  border-radius: 50%;
+  animation: blink 1s infinite;
 }
 @keyframes blink {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.3;
-    }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 .voice-btn {
-    padding: 7px 14px;
-    border: none;
-    border-radius: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.82rem;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.82rem;
 }
 .voice-cancel {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 .voice-send {
-    background: #22c55e;
-    color: #fff;
+  background: #22c55e;
+  color: #fff;
 }
 
 /* ===== GROUP PROFILE ===== */
-#group-profile {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.97);
-    backdrop-filter: blur(20px);
-    z-index: 45;
-    display: none;
-    flex-direction: column;
-    padding: 15px;
-    overflow-y: auto;
+#groupProfile {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.97);
+  backdrop-filter: blur(20px);
+  z-index: 45;
+  display: none;
+  flex-direction: column;
+  padding: 15px;
+  overflow-y: auto;
 }
-#group-profile.show {
-    display: flex;
+#groupProfile.show {
+  display: flex;
 }
 .panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 12px;
-    flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 12px;
+  flex-shrink: 0;
 }
 .panel-header h2 {
-    color: #fff;
-    font-size: 1.2rem;
+  color: #fff;
+  font-size: 1.2rem;
 }
 .close-btn {
-    color: #fff;
-    font-size: 1.3rem;
-    cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
 }
 .gp-header {
-    text-align: center;
-    padding: 15px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    margin-bottom: 12px;
+  text-align: center;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 12px;
 }
 .gp-avatar {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin: 0 auto 12px;
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    overflow: hidden;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 auto 12px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
 }
 .gp-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .gp-name {
-    color: #fff;
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 4px;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 4px;
 }
 .gp-members {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
 }
 .gp-link {
-    margin-top: 8px;
-    padding: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    color: #fbbf24;
-    font-size: 0.85rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  color: #fbbf24;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 .section-title {
-    color: #fbbf24;
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin: 12px 0 8px;
-    padding: 0 5px;
+  color: #fbbf24;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 12px 0 8px;
+  padding: 0 5px;
 }
 .member-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  margin-bottom: 5px;
 }
 .member-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.82rem;
-    flex-shrink: 0;
-    overflow: hidden;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 .member-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .member-info {
-    flex: 1;
-    min-width: 0;
-    color: #fff;
+  flex: 1;
+  min-width: 0;
+  color: #fff;
 }
 .member-name {
-    font-weight: 600;
-    font-size: 0.88rem;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    flex-wrap: wrap;
+  font-weight: 600;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
 }
 .member-role {
-    font-size: 0.68rem;
-    color: #fbbf24;
-    background: rgba(251, 191, 36, 0.15);
-    padding: 2px 7px;
-    border-radius: 10px;
+  font-size: 0.68rem;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.15);
+  padding: 2px 7px;
+  border-radius: 10px;
 }
 .member-actions {
-    display: flex;
-    gap: 4px;
+  display: flex;
+  gap: 4px;
 }
 .member-actions button {
-    padding: 4px 9px;
-    border: none;
-    border-radius: 7px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
+  padding: 4px 9px;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
 }
 .action-btn {
-    width: 100%;
-    padding: 11px;
-    border: none;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 6px;
-    font-family: inherit;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.action-btn.danger {
-    background: rgba(239, 68, 68, 0.15);
-    color: #fca5a5;
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 6px;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .action-btn.primary {
-    background: rgba(59, 130, 246, 0.15);
-    color: #93c5fd;
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
 }
 
 /* ===== VOICE CALL ===== */
-#voice-call {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #1e3a8a, #0a0a14);
-    z-index: 80;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+#voiceCall {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1e3a8a, #0a0a14);
+  z-index: 80;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
-#voice-call.show {
-    display: flex;
+#voiceCall.show {
+  display: flex;
 }
 .vc-room-name {
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 5px;
-    text-align: center;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  text-align: center;
 }
 .vc-status {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.85rem;
-    margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  margin-bottom: 20px;
 }
 .vc-participants {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    margin-bottom: 30px;
-    max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 30px;
+  max-width: 100%;
 }
 .vc-participant {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  position: relative;
 }
 .vc-p-avatar {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 1.5rem;
-    font-weight: 700;
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    overflow: hidden;
-    position: relative;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  position: relative;
 }
 .vc-p-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .vc-p-avatar.speaking {
-    border-color: #22c55e;
-    box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
-    animation: speakPulse 1s infinite;
+  border-color: #22c55e;
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+  animation: speakPulse 1s infinite;
 }
 @keyframes speakPulse {
-    0%,
-    100% {
-        box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
-    }
-    50% {
-        box-shadow: 0 0 30px rgba(34, 197, 94, 0.9);
-    }
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.9);
+  }
 }
 .vc-p-name {
-    color: #fff;
-    font-size: 0.8rem;
-    font-weight: 600;
-    max-width: 80px;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  max-width: 80px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .vc-p-mic {
-    position: absolute;
-    bottom: -3px;
-    right: -3px;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #22c55e;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 0.65rem;
-    border: 2px solid #0a0a14;
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #22c55e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.65rem;
+  border: 2px solid #0a0a14;
 }
 .vc-p-mic.muted {
-    background: #ef4444;
+  background: #ef4444;
 }
 .vc-controls {
-    display: flex;
-    gap: 18px;
+  display: flex;
+  gap: 18px;
 }
 .vc-btn {
-    width: 58px;
-    height: 58px;
-    border-radius: 50%;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 1.4rem;
-    cursor: pointer;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
 }
 .vc-btn.mic {
-    background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.15);
 }
 .vc-btn.mic.active {
-    background: #fbbf24;
-    color: #1a1a1a;
+  background: #fbbf24;
+  color: #1a1a1a;
 }
 .vc-btn.end {
-    background: #ef4444;
+  background: #ef4444;
 }
 
 /* ===== ADMIN / REPORT ===== */
-#admin-panel,
-#report-panel {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.97);
-    backdrop-filter: blur(20px);
-    z-index: 70;
-    display: none;
-    flex-direction: column;
-    padding: 15px;
-    overflow-y: auto;
+#adminPanel,
+#reportPanel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.97);
+  backdrop-filter: blur(20px);
+  z-index: 70;
+  display: none;
+  flex-direction: column;
+  padding: 15px;
+  overflow-y: auto;
 }
-#admin-panel.show,
-#report-panel.show {
-    display: flex;
+#adminPanel.show,
+#reportPanel.show {
+  display: flex;
 }
 .admin-user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 11px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    margin-bottom: 7px;
-    flex-wrap: wrap;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  margin-bottom: 7px;
+  flex-wrap: wrap;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 .admin-user .info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex: 1;
-    min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
 }
 .admin-user .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.85rem;
-    flex-shrink: 0;
-    overflow: hidden;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 .admin-user .avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .admin-user .details {
-    color: #fff;
-    min-width: 0;
+  color: #fff;
+  min-width: 0;
 }
 .admin-user .name {
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    flex-wrap: wrap;
-    font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
 }
 .admin-user .status {
-    font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin-top: 2px;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 2px;
 }
 .admin-user .actions {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
 }
 .admin-user .actions button {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 7px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
 }
 .ban-info {
-    width: 100%;
-    background: rgba(239, 68, 68, 0.15);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    border-radius: 8px;
-    padding: 7px;
-    margin-top: 6px;
-    color: #fca5a5;
-    font-size: 0.72rem;
+  width: 100%;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 7px;
+  margin-top: 6px;
+  color: #fca5a5;
+  font-size: 0.72rem;
 }
 .report-item {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 .report-item .title {
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.9rem;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
 }
 .report-item .detail {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.82rem;
-    margin-top: 3px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.82rem;
+  margin-top: 3px;
 }
 .report-item .meta {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 6px;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.4);
-    flex-wrap: wrap;
-    gap: 3px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  flex-wrap: wrap;
+  gap: 3px;
 }
 .report-item .view-btn {
-    margin-top: 7px;
-    padding: 7px 14px;
-    border: none;
-    border-radius: 8px;
-    background: #3b82f6;
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.8rem;
+  margin-top: 7px;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #3b82f6;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8rem;
 }
 
 /* ===== SAVED MESSAGES ===== */
-#saved-messages {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #0a0a14;
-    z-index: 45;
-    display: none;
-    flex-direction: column;
+#savedMessages {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #0a0a14;
+  z-index: 45;
+  display: none;
+  flex-direction: column;
 }
-#saved-messages.show {
-    display: flex;
+#savedMessages.show {
+  display: flex;
 }
 
 /* ===== IMAGE VIEWER ===== */
-#image-viewer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.97);
-    z-index: 150;
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+#imageViewer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.97);
+  z-index: 150;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
-#image-viewer.show {
-    display: flex;
+#imageViewer.show {
+  display: flex;
 }
-#image-viewer img {
-    max-width: 100%;
-    max-height: 75%;
-    border-radius: 12px;
+#imageViewer img {
+  max-width: 100%;
+  max-height: 75%;
+  border-radius: 12px;
 }
 .close-viewer {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    color: #fff;
-    font-size: 1.4rem;
-    cursor: pointer;
-    background: rgba(255, 255, 255, 0.1);
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .download-btn {
-    margin-top: 18px;
-    padding: 11px 25px;
-    background: #1e93f0;
-    color: #fff;
-    border: none;
-    border-radius: 30px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    text-decoration: none;
+  margin-top: 18px;
+  padding: 11px 25px;
+  background: #1e93f0;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  text-decoration: none;
 }
 
 /* ===== TOAST ===== */
 .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.92);
-    backdrop-filter: blur(10px);
-    padding: 14px 28px;
-    border-radius: 60px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #fff;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-    z-index: 300;
-    display: none;
-    align-items: center;
-    gap: 10px;
-    max-width: 90%;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(10px);
+  padding: 14px 28px;
+  border-radius: 60px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #fff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  z-index: 300;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  max-width: 90%;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .toast.show {
-    display: flex;
-    animation: slideUp 0.3s ease;
+  display: flex;
+  animation: slideUp 0.3s ease;
 }
 @keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 .toast.error {
-    border-color: #ef4444;
-    color: #fca5a5;
+  border-color: #ef4444;
+  color: #fca5a5;
 }
 .toast.success {
-    border-color: #22c55e;
-    color: #86efac;
+  border-color: #22c55e;
+  color: #86efac;
 }
 .toast.info {
-    border-color: #3b82f6;
-    color: #93c5fd;
+  border-color: #3b82f6;
+  color: #93c5fd;
 }
 
-/* ===== SYNC INDICATOR ===== */
-.sync-indicator {
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.85);
-    color: #fbbf24;
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    z-index: 250;
-    display: none;
-    align-items: center;
-    gap: 6px;
-    border: 1px solid rgba(251, 191, 36, 0.3);
+/* ===== INCREASE MODAL ===== */
+.increase-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 25px;
 }
-.sync-indicator.show {
-    display: flex;
+.increase-option {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
 }
-.sync-indicator .spinner {
-    width: 10px;
-    height: 10px;
-    border: 2px solid rgba(251, 191, 36, 0.3);
-    border-top-color: #fbbf24;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+.increase-option:active {
+  transform: scale(0.95);
+  border-color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
 }
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
+.increase-option .amount-text {
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 5px;
 }
-
-/* ===== OPTION (برای مودال‌ها) ===== */
-.option {
-    padding: 12px 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    color: #fff;
-    cursor: pointer;
-    margin-bottom: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.option:active {
-    background: rgba(255, 255, 255, 0.12);
-}
-.option.selected {
-    border-color: #fbbf24;
-    background: rgba(251, 191, 36, 0.1);
+.increase-option .to-text {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
 }
 
 /* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+  width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
 }
 </style>
 <body>
 
-    <div class="launcher-container">
+  <div class="app">
 
-        <!-- ===== LOADING ===== -->
-        <div id="loading-page" class="page active">
-            <img src="IMG_20260624_194139_214.png" alt="" class="bg-img" />
-            <div class="loading-overlay"></div>
-            <div class="loading-bottom">
-                <div class="loading-percent" id="loadPercent">۰٪</div>
-                <div class="loading-bar-container">
-                    <div class="loading-bar-fill" id="loadFill"></div>
-                </div>
-            </div>
+    <!-- ===== LOADING ===== -->
+    <div id="loadingPage" class="page active">
+      <img src="IMG_20260624_194139_214.png" alt="" class="bg-img" />
+      <div class="loading-overlay"></div>
+      <div class="loading-bottom">
+        <div class="loading-percent" id="loadPercent">۰٪</div>
+        <div class="loading-bar-container">
+          <div class="loading-bar-fill" id="loadFill"></div>
         </div>
-
-        <!-- ===== LAUNCHER ===== -->
-        <div id="launcher-page" class="page">
-            <img src="IMG_20260624_194706_469.jpg" alt="" class="bg-img" />
-            <div class="launcher-top">
-                <div class="menu-btn" id="menuBtn">
-                    <i class="fas fa-bars"></i>
-                </div>
-                <div class="profile-section" id="profileSection">
-                    <img src="" alt="Profile" class="profile-pic" id="launcherProfilePic" />
-                    <div class="profile-name" id="launcherProfileName"></div>
-                </div>
-            </div>
-
-            <div class="launcher-bottom">
-                <button class="btn-shop-green" id="shopBtn">
-                    <i class="fas fa-store"></i>
-                </button>
-                <button class="btn-launch" id="launchBtn">
-                    <i class="fas fa-play"></i>
-                    <span>اجرا</span>
-                </button>
-                <button class="btn-chat" id="chatBtn">
-                    <i class="fas fa-comment"></i>
-                </button>
-            </div>
-
-            <!-- Main Menu -->
-            <div id="main-menu">
-                <div class="menu-item" id="loginMenuItem">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span>ورود</span>
-                </div>
-                <div class="menu-item" id="registerMenuItem">
-                    <i class="fas fa-user-plus"></i>
-                    <span>ثبت‌نام</span>
-                </div>
-                <div class="menu-item" id="adminMenuItem" style="display:none;">
-                    <i class="fas fa-user-cog"></i>
-                    <span>پنل مدیریت</span>
-                </div>
-            </div>
-
-            <!-- Profile Menu -->
-            <div id="profile-menu">
-                <div class="profile-menu-header">
-                    <img src="" alt="Profile" class="profile-menu-pic" id="menuProfilePic" />
-                    <div class="profile-menu-name" id="menuProfileName"></div>
-                </div>
-                <div class="profile-menu-item" id="editProfileBtn">
-                    <span>ویرایش اطلاعات</span>
-                    <i class="fas fa-chevron-left"></i>
-                </div>
-                <div class="profile-menu-item" id="savedMsgBtn">
-                    <span>پیام‌های ذخیره شده</span>
-                    <i class="fas fa-bookmark"></i>
-                </div>
-                <div class="profile-menu-item" id="logoutBtn">
-                    <span>خروج از حساب</span>
-                    <i class="fas fa-sign-out-alt"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== MESSENGER ===== -->
-        <div id="messenger-page" class="page">
-            <img src="IMG_20260624_194706_469.jpg" alt="" class="bg-img" />
-            <div class="messenger-container">
-                <div class="messenger-header">
-                    <div class="back-btn" id="messengerBackBtn">
-                        <i class="fas fa-arrow-right"></i>
-                    </div>
-                    <div class="messenger-title">پیام‌رسان کبیر</div>
-                    <div class="messenger-actions">
-                        <i class="fas fa-user-cog" id="adminPanelBtn" title="پنل مدیریت"></i>
-                        <i class="fas fa-flag" id="reportPanelBtn" title="گزارش‌ها"></i>
-                    </div>
-                </div>
-                <div class="search-container">
-                    <input type="text" id="searchInput" placeholder="جستجو با آیدی، نام یا لینک..." />
-                </div>
-                <div class="search-tabs">
-                    <button class="search-tab active" data-tab="all">همه</button>
-                    <button class="search-tab" data-tab="pv">پیوی</button>
-                    <button class="search-tab" data-tab="group">گروه‌ها</button>
-                    <button class="search-tab" data-tab="channel">کانال‌ها</button>
-                </div>
-                <div class="chat-list" id="chatList"></div>
-            </div>
-        </div>
-
-        <!-- ===== CHAT ROOM ===== -->
-        <div id="chat-room">
-            <img src="IMG_20260624_194706_469.jpg" alt="" class="bg-img" />
-            <div class="chat-room-header">
-                <div class="back-btn" id="chatRoomBackBtn">
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-                <div class="room-avatar" id="roomAvatar">ک</div>
-                <div class="room-info" id="roomInfoClick">
-                    <div class="room-name" id="roomName">گروه کبیر</div>
-                    <div class="room-status" id="roomStatus">۰ عضو</div>
-                </div>
-                <div class="room-actions">
-                    <i class="fas fa-phone" id="voiceCallBtn" title="گفتگوی صوتی"></i>
-                    <i class="fas fa-ellipsis-v" id="roomMenuBtn"></i>
-                </div>
-            </div>
-            <div class="messages-area" id="chatMessages"></div>
-            <div class="voice-recorder" id="voiceRecorder">
-                <div class="voice-wave"><span class="rec-dot"></span><span>ضبط...</span><span id="voiceTimer">00:00</span></div>
-                <button class="voice-btn voice-cancel" id="voiceCancel">حذف</button>
-                <button class="voice-btn voice-send" id="voiceSend">ارسال</button>
-            </div>
-            <div class="chat-footer">
-                <i class="fas fa-paperclip fbtn" id="attachBtn"></i>
-                <input type="file" id="fileInput" style="display:none" multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip" />
-                <input type="text" id="msgInput" placeholder="پیام..." />
-                <i class="fas fa-microphone fbtn" id="voiceBtn"></i>
-                <div class="fbtn send" id="sendBtn"><i class="fas fa-paper-plane"></i></div>
-            </div>
-        </div>
-
-        <!-- ===== SHOP ===== -->
-        <div id="shop-page" class="page">
-            <img src="IMG_20260624_194140_933.png" alt="" class="bg-img" />
-            <div class="shop-header">
-                <div class="back-btn" id="shopBackBtn">
-                    <i class="fas fa-arrow-right"></i>
-                </div>
-                <div class="shop-title">فروشگاه</div>
-                <div style="width:44px;"></div>
-            </div>
-            <div class="wallet-section">
-                <div class="wallet-card coins">
-                    <i class="fas fa-coins"></i>
-                    <div class="amount" id="shopCoins">۰</div>
-                    <div class="label">سکه</div>
-                </div>
-                <div class="wallet-card dollars">
-                    <i class="fas fa-dollar-sign"></i>
-                    <div class="amount" id="shopDollars">۰</div>
-                    <div class="label">دلار</div>
-                </div>
-                <div class="wallet-card toman" id="increaseWalletBtn">
-                    <i class="fas fa-wallet"></i>
-                    <div class="amount" id="shopWallet">۰</div>
-                    <div class="label">تومان</div>
-                </div>
-            </div>
-            <div class="shop-tabs">
-                <button class="shop-tab active" onclick="switchShopTab('coins')">
-                    <i class="fas fa-coins"></i> سکه
-                </button>
-                <button class="shop-tab" onclick="switchShopTab('dollars')">
-                    <i class="fas fa-dollar-sign"></i> دلار
-                </button>
-            </div>
-            <div class="shop-content">
-                <div id="coinsPanel" class="tab-panel active">
-                    <div class="product-grid">
-                        <div class="product-card">
-                            <img src="ironcoin.png" alt="50 coins" onerror="this.style.display='none'" />
-                            <div class="name">۵۰ سکه</div>
-                            <div class="price">۲۰,۰۰۰ <small>تومان</small></div>
-                            <button class="buy-btn" onclick="buyItem(20000,50,'coins')">خرید</button>
-                        </div>
-                        <div class="product-card">
-                            <img src="ironcoin.png" alt="100 coins" onerror="this.style.display='none'" />
-                            <div class="name">۱۰۰ سکه</div>
-                            <div class="price">۵۰,۰۰۰ <small>تومان</small></div>
-                            <button class="buy-btn" onclick="buyItem(50000,100,'coins')">خرید</button>
-                        </div>
-                        <div class="product-card">
-                            <img src="ironcoin.png" alt="200 coins" onerror="this.style.display='none'" />
-                            <div class="name">۲۰۰ سکه</div>
-                            <div class="price">۸۵,۰۰۰ <small>تومان</small></div>
-                            <button class="buy-btn" onclick="buyItem(85000,200,'coins')">خرید</button>
-                        </div>
-                        <div class="product-card">
-                            <img src="ironcoin.png" alt="500 coins" onerror="this.style.display='none'" />
-                            <div class="name">۵۰۰ سکه</div>
-                            <div class="price">۱۷۰,۰۰۰ <small>تومان</small></div>
-                            <button class="buy-btn" onclick="buyItem(170000,500,'coins')">خرید</button>
-                        </div>
-                    </div>
-                </div>
-                <div id="dollarsPanel" class="tab-panel">
-                    <div class="product-grid">
-                        <div class="product-card">
-                            <img src="01.png" alt="100k dollars" onerror="this.style.display='none'" />
-                            <div class="name">۱۰۰,۰۰۰$</div>
-                            <div class="price">۱۰,۰۰۰ <small>تومان</small></div>
-                            <button class="buy-btn" onclick="buyItem(10000,100000,'dollars')">خرید</button>
-                        </div>
-                        <div class="product-card">
-                            <img src="01.png" alt="500k dollars" onerror="this.style.display='none'" />
-                            <div class="name">۵۰۰,۰۰۰$</div>
-                            <div class="price">۴۵,۰۰۰ <small>تومان</small></div>
-                            <button class="buy-btn" onclick="buyItem(45000,500000,'dollars')">خرید</button>
-                        </div>
-                        <div class="product-card">
-                            <img src="01.png" alt="1M dollars" onerror="this.style.display='none'" />
-                            <div class="name">۱,۰۰۰,۰۰۰$</div>
-                            <div class="price">۹۵,۰۰۰ <small>تومان</small></div>
-                            <button class="buy-btn" onclick="buyItem(95000,1000000,'dollars')">خرید</button>
-                        </div>
-                        <div class="product-card">
-                            <img src="01.png" alt="2M dollars" onerror="this.style.display='none'" />
-                            <div class="name">۲,۰۰۰,۰۰۰$</div>
-                            <div class="price">۱۸۵,۰۰۰ <small>تومان</small></div>
-                            <button class="buy-btn" onclick="buyItem(185000,2000000,'dollars')">خرید</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== GROUP PROFILE ===== -->
-        <div id="group-profile">
-            <div class="panel-header">
-                <h2>پروفایل گروه</h2>
-                <div class="close-btn" id="closeGroupProfile"><i class="fas fa-times"></i></div>
-            </div>
-            <div class="gp-header">
-                <div class="gp-avatar" id="gpAvatar">ک</div>
-                <div class="gp-name" id="gpName">گروه کبیر</div>
-                <div class="gp-members" id="gpMembers">۰ عضو</div>
-                <div class="gp-link"><i class="fas fa-link"></i><span id="gpLinkText">Kabir.ir/...</span></div>
-            </div>
-            <div id="gpOwnerActions"></div>
-            <div class="section-title">اعضا</div>
-            <div id="gpMembersList"></div>
-        </div>
-
-        <!-- ===== VOICE CALL ===== -->
-        <div id="voice-call">
-            <div class="vc-room-name" id="vcRoomName">گفتگوی صوتی</div>
-            <div class="vc-status" id="vcStatus">در حال اتصال...</div>
-            <div class="vc-participants" id="vcParticipants"></div>
-            <div class="vc-controls">
-                <button class="vc-btn mic active" id="vcMic"><i class="fas fa-microphone"></i></button>
-                <button class="vc-btn end" id="vcEnd"><i class="fas fa-phone-slash"></i></button>
-            </div>
-        </div>
-
-        <!-- ===== ADMIN PANEL ===== -->
-        <div id="admin-panel">
-            <div class="panel-header">
-                <h2>👑 پنل مدیریت</h2>
-                <div class="close-btn" id="closeAdminPanel"><i class="fas fa-times"></i></div>
-            </div>
-            <div id="adminUserList"></div>
-        </div>
-
-        <!-- ===== REPORT PANEL ===== -->
-        <div id="report-panel">
-            <div class="panel-header">
-                <h2>📋 گزارش‌ها</h2>
-                <div class="close-btn" id="closeReportPanel"><i class="fas fa-times"></i></div>
-            </div>
-            <div id="reportList"></div>
-        </div>
-
-        <!-- ===== SAVED MESSAGES ===== -->
-        <div id="saved-messages">
-            <div class="chat-room-header">
-                <div class="back-btn" id="savedBackBtn"><i class="fas fa-arrow-right"></i></div>
-                <div class="room-avatar" style="background:linear-gradient(135deg,#fbbf24,#f59e0b)">
-                    <i class="fas fa-bookmark" style="color:#1a1a1a"></i>
-                </div>
-                <div class="room-info">
-                    <div class="room-name">پیام‌های ذخیره شده</div>
-                    <div class="room-status">خصوصی</div>
-                </div>
-            </div>
-            <div class="messages-area" id="savedMessagesArea"></div>
-            <div class="chat-footer">
-                <i class="fas fa-paperclip fbtn" id="savedAttachBtn"></i>
-                <input type="file" id="savedFileInput" style="display:none" multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt" />
-                <input type="text" id="savedMsgInput" placeholder="پیام ذخیره کنید..." />
-                <div class="fbtn send" id="savedSendBtn"><i class="fas fa-paper-plane"></i></div>
-            </div>
-        </div>
-
-        <!-- ===== MODALS ===== -->
-        <div id="auth-screen">
-            <div class="auth-card">
-                <h2 id="authTitle">ورود به حساب</h2>
-                <div class="auth-tabs">
-                    <button class="auth-tab active" id="tabLogin">ورود</button>
-                    <button class="auth-tab" id="tabRegister">ثبت‌نام</button>
-                </div>
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label>شماره موبایل</label>
-                        <input type="tel" id="loginPhone" placeholder="09xxxxxxxxx" required />
-                    </div>
-                    <div class="form-group">
-                        <label>رمز عبور</label>
-                        <input type="password" id="loginPass" placeholder="رمز عبور" required />
-                    </div>
-                    <button type="submit" class="btn-submit">ورود</button>
-                </form>
-                <form id="registerForm" style="display:none;">
-                    <div class="form-group">
-                        <label>عکس پروفایل</label>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="profilePicInput" accept="image/*" />
-                            <label for="profilePicInput" class="file-input-label" id="fileLabel">
-                                <i class="fas fa-camera"></i><span>انتخاب از گالری</span>
-                            </label>
-                            <img src="" class="preview-img" id="previewImg" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>شماره موبایل</label>
-                        <input type="tel" id="regPhone" placeholder="09xxxxxxxxx" required />
-                    </div>
-                    <div class="form-group">
-                        <label>آیدی (انگلیسی)</label>
-                        <input type="text" id="regUsername" placeholder="username" required />
-                    </div>
-                    <div class="form-group">
-                        <label>نام نمایشی</label>
-                        <input type="text" id="regName" placeholder="نام کاربری" required />
-                    </div>
-                    <div class="form-group">
-                        <label>رمز عبور</label>
-                        <input type="password" id="regPass" placeholder="رمز عبور" required />
-                    </div>
-                    <div class="form-group">
-                        <label>تکرار رمز عبور</label>
-                        <input type="password" id="regPassConfirm" placeholder="تکرار رمز عبور" required />
-                    </div>
-                    <div class="form-group">
-                        <label>سن</label>
-                        <input type="number" id="regAge" placeholder="سن" min="1" max="120" required />
-                    </div>
-                    <button type="submit" class="btn-submit">ثبت‌نام</button>
-                </form>
-                <button class="btn-close-auth" id="closeAuthBtn">بازگشت</button>
-            </div>
-        </div>
-
-        <div id="edit-profile-screen">
-            <div class="auth-card">
-                <h2>ویرایش اطلاعات</h2>
-                <form id="editForm">
-                    <div class="form-group">
-                        <label>عکس پروفایل <span class="price-tag">۱۰ تومان</span></label>
-                        <div class="file-input-wrapper">
-                            <input type="file" id="editPicInput" accept="image/*" />
-                            <label for="editPicInput" class="file-input-label" id="editFileLabel">
-                                <i class="fas fa-camera"></i><span>انتخاب عکس جدید</span>
-                            </label>
-                            <img src="" class="preview-img" id="editPreviewImg" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>آیدی <span class="price-tag">۱۰۰ سکه</span></label>
-                        <input type="text" id="editUsername" required />
-                    </div>
-                    <div class="form-group">
-                        <label>نام <span class="price-tag">۱۰۰ سکه</span></label>
-                        <input type="text" id="editName" required />
-                    </div>
-                    <div class="form-group">
-                        <label>رمز عبور جدید <span class="price-tag">۱۰۰ سکه</span></label>
-                        <input type="password" id="editPass" />
-                    </div>
-                    <div class="form-group">
-                        <label>سن <span class="price-tag">۱۰۰ سکه</span></label>
-                        <input type="number" id="editAge" min="1" max="120" required />
-                    </div>
-                    <button type="submit" class="btn-submit">ذخیره</button>
-                </form>
-                <button class="btn-close-auth" id="closeEditBtn">انصراف</button>
-            </div>
-        </div>
-
-        <div id="gift-modal">
-            <div class="modal-card">
-                <h3>🎁 پاکت هدیه</h3>
-                <div class="form-group"><input type="number" id="giftAmount" placeholder="مبلغ (حداقل ۲۰۰۰ تومان)" min="2000" /></div>
-                <div class="form-group"><textarea id="giftReason" placeholder="چرا پاکت هدیه می‌دهید؟" rows="2"></textarea></div>
-                <div class="form-group">
-                    <label>پیوست فایل</label>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="giftFileInput" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt" />
-                        <label for="giftFileInput" class="file-input-label" id="giftFileLabel">
-                            <i class="fas fa-paperclip"></i><span>انتخاب فایل</span>
-                        </label>
-                    </div>
-                </div>
-                <button class="btn-submit" id="sendGiftBtn">ارسال پاکت</button>
-                <button class="btn-close-auth" id="closeGiftBtn">انصراف</button>
-            </div>
-        </div>
-
-        <div id="report-modal">
-            <div class="modal-card">
-                <h3>🚩 گزارش</h3>
-                <div class="option" data-reason="بحث سیاسی">بحث سیاسی</div>
-                <div class="option" data-reason="کلاهبرداری">کلاهبرداری</div>
-                <div class="option" data-reason="بی احترامی">بی احترامی</div>
-                <div class="option" data-reason="محتوای نامناسب">محتوای نامناسب</div>
-                <div class="option" data-reason="سایر">سایر</div>
-                <div class="form-group"><textarea id="reportDesc" placeholder="توضیحات..." rows="3"></textarea></div>
-                <button class="btn-submit" id="submitReportBtn">ارسال گزارش</button>
-                <button class="btn-close-auth" id="closeReportBtn">انصراف</button>
-            </div>
-        </div>
-
-        <div id="delete-modal">
-            <div class="modal-card">
-                <h3>🗑️ حذف پیام</h3>
-                <p style="color:rgba(255,255,255,.7);text-align:center;margin-bottom:15px">این پیام چگونه حذف شود؟</p>
-                <button class="btn-submit" id="deleteForMeBtn">حذف برای خودم</button>
-                <button class="btn-submit" style="background:#ef4444;color:#fff" id="deleteForAllBtn">حذف برای همه</button>
-                <button class="btn-close-auth" id="cancelDeleteBtn">انصراف</button>
-            </div>
-        </div>
-
-        <div id="block-modal">
-            <div class="modal-card">
-                <h3>🚫 مسدود کردن</h3>
-                <p style="color:rgba(255,255,255,.7);text-align:center;margin-bottom:15px" id="blockText">آیا می‌خواهید این کاربر را مسدود کنید؟</p>
-                <button class="btn-submit" style="background:#ef4444;color:#fff" id="confirmBlockBtn">مسدود کردن</button>
-                <button class="btn-close-auth" id="cancelBlockBtn">انصراف</button>
-            </div>
-        </div>
-
-        <div id="room-menu-modal">
-            <div class="modal-card">
-                <h3>گزینه‌ها</h3>
-                <div class="option" id="menuReport"><i class="fas fa-flag"></i> گزارش</div>
-                <div class="option" id="menuBlock" style="display:none"><i class="fas fa-ban"></i> مسدود کردن</div>
-                <div class="option" id="menuUnblock" style="display:none"><i class="fas fa-check-circle"></i> رفع مسدودی</div>
-                <button class="btn-close-auth" id="closeRoomMenuBtn">بستن</button>
-            </div>
-        </div>
-
-        <div id="ban-modal">
-            <div class="modal-card">
-                <h3>⛔ بن کردن کاربر</h3>
-                <div class="form-group">
-                    <select id="banDuration">
-                        <option value="3600000">۱ ساعت</option>
-                        <option value="86400000">۱ روز</option>
-                        <option value="604800000">۱ هفته</option>
-                        <option value="2592000000">۱ ماه</option>
-                        <option value="0">دائمی</option>
-                    </select>
-                </div>
-                <div class="form-group"><textarea id="banReason" placeholder="دلیل بن..." rows="2"></textarea></div>
-                <button class="btn-submit" style="background:#ef4444;color:#fff" id="confirmBanBtn">بن کردن</button>
-                <button class="btn-close-auth" id="cancelBanBtn">انصراف</button>
-            </div>
-        </div>
-
-        <div id="increase-modal">
-            <div class="modal-card">
-                <h2>افزایش کیف پول</h2>
-                <div class="increase-options">
-                    <div class="increase-option" onclick="increaseWallet(20000)"><div class="amount-text">۲۰,۰۰۰</div><div class="to-text">تومان</div></div>
-                    <div class="increase-option" onclick="increaseWallet(50000)"><div class="amount-text">۵۰,۰۰۰</div><div class="to-text">تومان</div></div>
-                    <div class="increase-option" onclick="increaseWallet(100000)"><div class="amount-text">۱۰۰,۰۰۰</div><div class="to-text">تومان</div></div>
-                    <div class="increase-option" onclick="increaseWallet(500000)"><div class="amount-text">۵۰۰,۰۰۰</div><div class="to-text">تومان</div></div>
-                </div>
-                <button class="btn-close-modal" onclick="closeIncreaseModal()">بستن</button>
-            </div>
-        </div>
-
-        <!-- ===== IMAGE VIEWER ===== -->
-        <div id="image-viewer">
-            <div class="close-viewer" id="closeViewer"><i class="fas fa-times"></i></div>
-            <img src="" id="viewerImg" />
-            <a class="download-btn" id="viewerDownload" download><i class="fas fa-download"></i>دانلود</a>
-        </div>
-
-        <!-- ===== TOAST & SYNC ===== -->
-        <div class="toast" id="toast"><span id="toastMsg">پیام</span></div>
-        <div class="sync-indicator" id="syncIndicator"><div class="spinner"></div><span>همگام‌سازی...</span></div>
-
+      </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- ===== LAUNCHER ===== -->
+    <div id="launcherPage" class="page">
+      <img src="IMG_20260624_194706_469.jpg" alt="" class="bg-img" />
+      <div class="launcher-top">
+        <div class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></div>
+        <div class="profile-section" id="profileSection">
+          <img src="" alt="" class="profile-pic" id="launcherProfilePic" />
+          <div class="profile-name" id="launcherProfileName"></div>
+        </div>
+      </div>
+      <div class="launcher-bottom">
+        <button class="btn-shop" id="shopBtn"><i class="fas fa-store"></i></button>
+        <button class="btn-launch" id="launchBtn"><i class="fas fa-play"></i><span>اجرا</span></button>
+        <button class="btn-chat" id="chatBtn"><i class="fas fa-comment"></i></button>
+      </div>
+      <div id="mainMenu" class="dropdown">
+        <div class="menu-item" id="loginMenuItem"><i class="fas fa-sign-in-alt"></i><span>ورود</span></div>
+        <div class="menu-item" id="registerMenuItem"><i class="fas fa-user-plus"></i><span>ثبت‌نام</span></div>
+        <div class="menu-item" id="adminMenuItem" style="display:none;"><i class="fas fa-user-cog"></i><span>پنل مدیریت</span></div>
+      </div>
+      <div id="profileMenu" class="dropdown">
+        <div class="profile-menu-header">
+          <img src="" alt="" class="profile-menu-pic" id="menuProfilePic" />
+          <div class="profile-menu-name" id="menuProfileName"></div>
+        </div>
+        <div class="menu-item" id="editProfileBtn"><span>ویرایش اطلاعات</span><i class="fas fa-chevron-left"></i></div>
+        <div class="menu-item" id="savedMsgBtn"><span>پیام‌های ذخیره شده</span><i class="fas fa-bookmark"></i></div>
+        <div class="menu-item" id="logoutBtn"><span>خروج از حساب</span><i class="fas fa-sign-out-alt"></i></div>
+      </div>
+    </div>
+
+    <!-- ===== MESSENGER ===== -->
+    <div id="messengerPage" class="page">
+      <img src="IMG_20260624_194706_469.jpg" alt="" class="bg-img" />
+      <div class="messenger-container">
+        <div class="messenger-header">
+          <div class="back-btn" id="messengerBackBtn"><i class="fas fa-arrow-right"></i></div>
+          <div class="messenger-title">پیام‌رسان کبیر</div>
+          <div class="messenger-actions">
+            <i class="fas fa-user-cog" id="adminPanelBtn" title="پنل مدیریت"></i>
+            <i class="fas fa-flag" id="reportPanelBtn" title="گزارش‌ها"></i>
+          </div>
+        </div>
+        <div class="search-container">
+          <input type="text" id="searchInput" placeholder="جستجو..." />
+        </div>
+        <div class="search-tabs">
+          <button class="search-tab active" data-tab="all">همه</button>
+          <button class="search-tab" data-tab="pv">پیوی</button>
+          <button class="search-tab" data-tab="group">گروه‌ها</button>
+        </div>
+        <div class="chat-list" id="chatList"></div>
+      </div>
+    </div>
+
+    <!-- ===== CHAT ROOM ===== -->
+    <div id="chatRoom">
+      <img src="IMG_20260624_194706_469.jpg" alt="" class="bg-img" />
+      <div class="chat-room-header">
+        <div class="back-btn" id="chatRoomBackBtn"><i class="fas fa-arrow-right"></i></div>
+        <div class="room-avatar" id="roomAvatar">ک</div>
+        <div class="room-info" id="roomInfoClick">
+          <div class="room-name" id="roomName">گروه</div>
+          <div class="room-status" id="roomStatus">۰ عضو</div>
+        </div>
+        <div class="room-actions">
+          <i class="fas fa-phone" id="voiceCallBtn" title="گفتگوی صوتی"></i>
+          <i class="fas fa-ellipsis-v" id="roomMenuBtn"></i>
+        </div>
+      </div>
+      <div class="messages-area" id="chatMessages"></div>
+      <div class="voice-recorder" id="voiceRecorder">
+        <div class="voice-wave"><span class="rec-dot"></span><span>ضبط...</span><span id="voiceTimer">00:00</span></div>
+        <button class="voice-btn voice-cancel" id="voiceCancel">حذف</button>
+        <button class="voice-btn voice-send" id="voiceSend">ارسال</button>
+      </div>
+      <div class="chat-footer">
+        <i class="fas fa-paperclip fbtn" id="attachBtn"></i>
+        <input type="file" id="fileInput" style="display:none" multiple />
+        <input type="text" id="msgInput" placeholder="پیام..." />
+        <i class="fas fa-microphone fbtn" id="voiceBtn"></i>
+        <div class="fbtn send" id="sendBtn"><i class="fas fa-paper-plane"></i></div>
+      </div>
+    </div>
+
+    <!-- ===== SHOP ===== -->
+    <div id="shopPage" class="page">
+      <img src="IMG_20260624_194140_933.png" alt="" class="bg-img" />
+      <div class="shop-header">
+        <div class="back-btn" id="shopBackBtn"><i class="fas fa-arrow-right"></i></div>
+        <div class="shop-title">فروشگاه</div>
+        <div style="width:44px;"></div>
+      </div>
+      <div class="wallet-section">
+        <div class="wallet-card coins"><i class="fas fa-coins"></i><div class="amount" id="shopCoins">۰</div><div class="label">سکه</div></div>
+        <div class="wallet-card dollars"><i class="fas fa-dollar-sign"></i><div class="amount" id="shopDollars">۰</div><div class="label">دلار</div></div>
+        <div class="wallet-card toman" id="increaseWalletBtn"><i class="fas fa-wallet"></i><div class="amount" id="shopWallet">۰</div><div class="label">تومان</div></div>
+      </div>
+      <div class="shop-tabs">
+        <button class="shop-tab active" onclick="switchShopTab('coins')"><i class="fas fa-coins"></i> سکه</button>
+        <button class="shop-tab" onclick="switchShopTab('dollars')"><i class="fas fa-dollar-sign"></i> دلار</button>
+      </div>
+      <div class="shop-content">
+        <div id="coinsPanel" class="tab-panel active">
+          <div class="product-grid">
+            <div class="product-card"><img src="ironcoin.png" onerror="this.style.display='none'" /><div class="name">۵۰ سکه</div><div class="price">۲۰,۰۰۰ <small>تومان</small></div><button class="buy-btn" onclick="buyItem(20000,50,'coins')">خرید</button></div>
+            <div class="product-card"><img src="ironcoin.png" onerror="this.style.display='none'" /><div class="name">۱۰۰ سکه</div><div class="price">۵۰,۰۰۰ <small>تومان</small></div><button class="buy-btn" onclick="buyItem(50000,100,'coins')">خرید</button></div>
+            <div class="product-card"><img src="ironcoin.png" onerror="this.style.display='none'" /><div class="name">۲۰۰ سکه</div><div class="price">۸۵,۰۰۰ <small>تومان</small></div><button class="buy-btn" onclick="buyItem(85000,200,'coins')">خرید</button></div>
+            <div class="product-card"><img src="ironcoin.png" onerror="this.style.display='none'" /><div class="name">۵۰۰ سکه</div><div class="price">۱۷۰,۰۰۰ <small>تومان</small></div><button class="buy-btn" onclick="buyItem(170000,500,'coins')">خرید</button></div>
+          </div>
+        </div>
+        <div id="dollarsPanel" class="tab-panel">
+          <div class="product-grid">
+            <div class="product-card"><img src="01.png" onerror="this.style.display='none'" /><div class="name">۱۰۰,۰۰۰$</div><div class="price">۱۰,۰۰۰ <small>تومان</small></div><button class="buy-btn" onclick="buyItem(10000,100000,'dollars')">خرید</button></div>
+            <div class="product-card"><img src="01.png" onerror="this.style.display='none'" /><div class="name">۵۰۰,۰۰۰$</div><div class="price">۴۵,۰۰۰ <small>تومان</small></div><button class="buy-btn" onclick="buyItem(45000,500000,'dollars')">خرید</button></div>
+            <div class="product-card"><img src="01.png" onerror="this.style.display='none'" /><div class="name">۱,۰۰۰,۰۰۰$</div><div class="price">۹۵,۰۰۰ <small>تومان</small></div><button class="buy-btn" onclick="buyItem(95000,1000000,'dollars')">خرید</button></div>
+            <div class="product-card"><img src="01.png" onerror="this.style.display='none'" /><div class="name">۲,۰۰۰,۰۰۰$</div><div class="price">۱۸۵,۰۰۰ <small>تومان</small></div><button class="buy-btn" onclick="buyItem(185000,2000000,'dollars')">خرید</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== GROUP PROFILE ===== -->
+    <div id="groupProfile">
+      <div class="panel-header">
+        <h2>پروفایل گروه</h2>
+        <div class="close-btn" id="closeGroupProfile"><i class="fas fa-times"></i></div>
+      </div>
+      <div class="gp-header">
+        <div class="gp-avatar" id="gpAvatar">ک</div>
+        <div class="gp-name" id="gpName">گروه</div>
+        <div class="gp-members" id="gpMembers">۰ عضو</div>
+        <div class="gp-link"><i class="fas fa-link"></i><span id="gpLinkText">Kabir.ir/...</span></div>
+      </div>
+      <div id="gpOwnerActions"></div>
+      <div class="section-title">اعضا</div>
+      <div id="gpMembersList"></div>
+    </div>
+
+    <!-- ===== VOICE CALL ===== -->
+    <div id="voiceCall">
+      <div class="vc-room-name" id="vcRoomName">گفتگوی صوتی</div>
+      <div class="vc-status" id="vcStatus">در حال اتصال...</div>
+      <div class="vc-participants" id="vcParticipants"></div>
+      <div class="vc-controls">
+        <button class="vc-btn mic active" id="vcMic"><i class="fas fa-microphone"></i></button>
+        <button class="vc-btn end" id="vcEnd"><i class="fas fa-phone-slash"></i></button>
+      </div>
+    </div>
+
+    <!-- ===== ADMIN PANEL ===== -->
+    <div id="adminPanel">
+      <div class="panel-header">
+        <h2>👑 پنل مدیریت</h2>
+        <div class="close-btn" id="closeAdminPanel"><i class="fas fa-times"></i></div>
+      </div>
+      <div id="adminUserList"></div>
+    </div>
+
+    <!-- ===== REPORT PANEL ===== -->
+    <div id="reportPanel">
+      <div class="panel-header">
+        <h2>📋 گزارش‌ها</h2>
+        <div class="close-btn" id="closeReportPanel"><i class="fas fa-times"></i></div>
+      </div>
+      <div id="reportList"></div>
+    </div>
+
+    <!-- ===== SAVED MESSAGES ===== -->
+    <div id="savedMessages">
+      <div class="chat-room-header">
+        <div class="back-btn" id="savedBackBtn"><i class="fas fa-arrow-right"></i></div>
+        <div class="room-avatar" style="background:linear-gradient(135deg,#fbbf24,#f59e0b)"><i class="fas fa-bookmark" style="color:#1a1a1a"></i></div>
+        <div class="room-info"><div class="room-name">پیام‌های ذخیره شده</div><div class="room-status">خصوصی</div></div>
+      </div>
+      <div class="messages-area" id="savedMessagesArea"></div>
+      <div class="chat-footer">
+        <i class="fas fa-paperclip fbtn" id="savedAttachBtn"></i>
+        <input type="file" id="savedFileInput" style="display:none" multiple />
+        <input type="text" id="savedMsgInput" placeholder="پیام ذخیره کنید..." />
+        <div class="fbtn send" id="savedSendBtn"><i class="fas fa-paper-plane"></i></div>
+      </div>
+    </div>
+
+    <!-- ===== MODALS ===== -->
+    <div id="authScreen">
+      <div class="auth-card">
+        <h2 id="authTitle">ورود به حساب</h2>
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tabLogin">ورود</button>
+          <button class="auth-tab" id="tabRegister">ثبت‌نام</button>
+        </div>
+        <form id="loginForm">
+          <div class="form-group"><label>شماره موبایل</label><input type="tel" id="loginPhone" placeholder="09xxxxxxxxx" required /></div>
+          <div class="form-group"><label>رمز عبور</label><input type="password" id="loginPass" placeholder="رمز عبور" required /></div>
+          <button type="submit" class="btn-submit">ورود</button>
+        </form>
+        <form id="registerForm" style="display:none;">
+          <div class="form-group">
+            <label>عکس پروفایل</label>
+            <div class="file-input-wrapper">
+              <input type="file" id="profilePicInput" accept="image/*" />
+              <label for="profilePicInput" class="file-input-label" id="fileLabel"><i class="fas fa-camera"></i><span>انتخاب از گالری</span></label>
+              <img src="" class="preview-img" id="previewImg" />
+            </div>
+          </div>
+          <div class="form-group"><label>شماره موبایل</label><input type="tel" id="regPhone" placeholder="09xxxxxxxxx" required /></div>
+          <div class="form-group"><label>آیدی (انگلیسی)</label><input type="text" id="regUsername" placeholder="username" required /></div>
+          <div class="form-group"><label>نام نمایشی</label><input type="text" id="regName" placeholder="نام کاربری" required /></div>
+          <div class="form-group"><label>رمز عبور</label><input type="password" id="regPass" placeholder="رمز عبور" required /></div>
+          <div class="form-group"><label>تکرار رمز عبور</label><input type="password" id="regPassConfirm" placeholder="تکرار رمز عبور" required /></div>
+          <div class="form-group"><label>سن</label><input type="number" id="regAge" placeholder="سن" min="1" max="120" required /></div>
+          <button type="submit" class="btn-submit">ثبت‌نام</button>
+        </form>
+        <button class="btn-close" id="closeAuthBtn">بازگشت</button>
+      </div>
+    </div>
+
+    <div id="editProfileScreen">
+      <div class="auth-card">
+        <h2>ویرایش اطلاعات</h2>
+        <form id="editForm">
+          <div class="form-group">
+            <label>عکس پروفایل <span class="price-tag">۱۰ تومان</span></label>
+            <div class="file-input-wrapper">
+              <input type="file" id="editPicInput" accept="image/*" />
+              <label for="editPicInput" class="file-input-label" id="editFileLabel"><i class="fas fa-camera"></i><span>انتخاب عکس جدید</span></label>
+              <img src="" class="preview-img" id="editPreviewImg" />
+            </div>
+          </div>
+          <div class="form-group"><label>آیدی <span class="price-tag">۱۰۰ سکه</span></label><input type="text" id="editUsername" required /></div>
+          <div class="form-group"><label>نام <span class="price-tag">۱۰۰ سکه</span></label><input type="text" id="editName" required /></div>
+          <div class="form-group"><label>رمز عبور جدید <span class="price-tag">۱۰۰ سکه</span></label><input type="password" id="editPass" /></div>
+          <div class="form-group"><label>سن <span class="price-tag">۱۰۰ سکه</span></label><input type="number" id="editAge" min="1" max="120" required /></div>
+          <button type="submit" class="btn-submit">ذخیره</button>
+        </form>
+        <button class="btn-close" id="closeEditBtn">انصراف</button>
+      </div>
+    </div>
+
+    <div id="giftModal">
+      <div class="modal-card">
+        <h3>🎁 پاکت هدیه</h3>
+        <div class="form-group"><input type="number" id="giftAmount" placeholder="مبلغ (حداقل ۲۰۰۰ تومان)" min="2000" /></div>
+        <div class="form-group"><textarea id="giftReason" placeholder="چرا پاکت هدیه می‌دهید؟" rows="2"></textarea></div>
+        <div class="form-group">
+          <label>پیوست فایل</label>
+          <div class="file-input-wrapper">
+            <input type="file" id="giftFileInput" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt" />
+            <label for="giftFileInput" class="file-input-label" id="giftFileLabel"><i class="fas fa-paperclip"></i><span>انتخاب فایل</span></label>
+          </div>
+        </div>
+        <button class="btn-submit" id="sendGiftBtn">ارسال پاکت</button>
+        <button class="btn-close" id="closeGiftBtn">انصراف</button>
+      </div>
+    </div>
+
+    <div id="reportModal">
+      <div class="modal-card">
+        <h3>🚩 گزارش</h3>
+        <div class="option" data-reason="بحث سیاسی">بحث سیاسی</div>
+        <div class="option" data-reason="کلاهبرداری">کلاهبرداری</div>
+        <div class="option" data-reason="بی احترامی">بی احترامی</div>
+        <div class="option" data-reason="محتوای نامناسب">محتوای نامناسب</div>
+        <div class="option" data-reason="سایر">سایر</div>
+        <div class="form-group"><textarea id="reportDesc" placeholder="توضیحات..." rows="3"></textarea></div>
+        <button class="btn-submit" id="submitReportBtn">ارسال گزارش</button>
+        <button class="btn-close" id="closeReportBtn">انصراف</button>
+      </div>
+    </div>
+
+    <div id="deleteModal">
+      <div class="modal-card">
+        <h3>🗑️ حذف پیام</h3>
+        <p style="color:rgba(255,255,255,.7);text-align:center;margin-bottom:15px">این پیام چگونه حذف شود؟</p>
+        <button class="btn-submit" id="deleteForMeBtn">حذف برای خودم</button>
+        <button class="btn-submit" style="background:#ef4444;color:#fff" id="deleteForAllBtn">حذف برای همه</button>
+        <button class="btn-close" id="cancelDeleteBtn">انصراف</button>
+      </div>
+    </div>
+
+    <div id="blockModal">
+      <div class="modal-card">
+        <h3>🚫 مسدود کردن</h3>
+        <p style="color:rgba(255,255,255,.7);text-align:center;margin-bottom:15px" id="blockText">آیا می‌خواهید این کاربر را مسدود کنید؟</p>
+        <button class="btn-submit" style="background:#ef4444;color:#fff" id="confirmBlockBtn">مسدود کردن</button>
+        <button class="btn-close" id="cancelBlockBtn">انصراف</button>
+      </div>
+    </div>
+
+    <div id="roomMenuModal">
+      <div class="modal-card">
+        <h3>گزینه‌ها</h3>
+        <div class="option" id="menuReport"><i class="fas fa-flag"></i> گزارش</div>
+        <div class="option" id="menuBlock" style="display:none"><i class="fas fa-ban"></i> مسدود کردن</div>
+        <div class="option" id="menuUnblock" style="display:none"><i class="fas fa-check-circle"></i> رفع مسدودی</div>
+        <button class="btn-close" id="closeRoomMenuBtn">بستن</button>
+      </div>
+    </div>
+
+    <div id="banModal">
+      <div class="modal-card">
+        <h3>⛔ بن کردن کاربر</h3>
+        <div class="form-group">
+          <select id="banDuration">
+            <option value="3600000">۱ ساعت</option>
+            <option value="86400000">۱ روز</option>
+            <option value="604800000">۱ هفته</option>
+            <option value="2592000000">۱ ماه</option>
+            <option value="0">دائمی</option>
+          </select>
+        </div>
+        <div class="form-group"><textarea id="banReason" placeholder="دلیل بن..." rows="2"></textarea></div>
+        <button class="btn-submit" style="background:#ef4444;color:#fff" id="confirmBanBtn">بن کردن</button>
+        <button class="btn-close" id="cancelBanBtn">انصراف</button>
+      </div>
+    </div>
+
+    <div id="increaseModal">
+      <div class="modal-card">
+        <h2>افزایش کیف پول</h2>
+        <div class="increase-options">
+          <div class="increase-option" onclick="increaseWallet(20000)"><div class="amount-text">۲۰,۰۰۰</div><div class="to-text">تومان</div></div>
+          <div class="increase-option" onclick="increaseWallet(50000)"><div class="amount-text">۵۰,۰۰۰</div><div class="to-text">تومان</div></div>
+          <div class="increase-option" onclick="increaseWallet(100000)"><div class="amount-text">۱۰۰,۰۰۰</div><div class="to-text">تومان</div></div>
+          <div class="increase-option" onclick="increaseWallet(500000)"><div class="amount-text">۵۰۰,۰۰۰</div><div class="to-text">تومان</div></div>
+        </div>
+        <button class="btn-close" onclick="closeIncreaseModal()">بستن</button>
+      </div>
+    </div>
+
+    <!-- ===== IMAGE VIEWER ===== -->
+    <div id="imageViewer">
+      <div class="close-viewer" id="closeViewer"><i class="fas fa-times"></i></div>
+      <img src="" id="viewerImg" />
+      <a class="download-btn" id="viewerDownload" download><i class="fas fa-download"></i>دانلود</a>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div id="toast" class="toast"><span id="toastMsg">پیام</span></div>
+
+  </div>
+
+  <script src="script.js"></script>
 <script>
 // ============================================================
 // CONFIG
@@ -2616,13 +2305,13 @@ body {
 const JSONBIN_ID = '6a310a04da38895dfec86661';
 const JSONBIN_KEY = '$2a$10$G8pgSWnFz4w/.voj3lfBPuJL7luRXAXiR/fIufC3YIB4.qRkZSjSS';
 const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_ID}`;
-const LOCAL_KEY = 'kabir_local_v3';
+const LOCAL_KEY = 'kabir_local_v4';
 const CREATOR_PHONE = '09904844031';
 const CREATOR_PASS = 'Par1617230';
 const CREATOR_USERNAME = 'kabir_creator';
 const SUPPORT_GROUP_ID = 'group_server_kabir';
 const BASE_LINK = 'Kabir.ir/';
-const SYNC_INTERVAL = 3000;
+const SYNC_INTERVAL = 5000;
 
 const iceServers = [
     { urls: "stun:stun.relay.metered.ca:80" },
@@ -2665,7 +2354,8 @@ function defaultData() {
         blockedUsers: {},
         deletedMessages: {},
         editCount: 0,
-        currentUser: null
+        currentUser: null,
+        devices: {}
     };
 }
 
@@ -2727,6 +2417,17 @@ function formatFileSize(bytes) {
     return (bytes / 1048576).toFixed(1) + ' MB';
 }
 
+function getDeviceInfo() {
+    const ua = navigator.userAgent;
+    let os = 'Unknown';
+    if (ua.indexOf('Windows') !== -1) os = 'Windows';
+    else if (ua.indexOf('Mac') !== -1) os = 'MacOS';
+    else if (ua.indexOf('Linux') !== -1) os = 'Linux';
+    else if (ua.indexOf('Android') !== -1) os = 'Android';
+    else if (ua.indexOf('iPhone') !== -1 || ua.indexOf('iPad') !== -1) os = 'iOS';
+    return os;
+}
+
 // ============================================================
 // SERVER SYNC
 // ============================================================
@@ -2768,8 +2469,6 @@ async function pushToServer() {
     localVersion = d.version;
     serverData = d;
     saveLocal(d);
-
-    showSync(true);
     try {
         await fetch(JSONBIN_URL, {
             method: 'PUT',
@@ -2781,16 +2480,6 @@ async function pushToServer() {
         });
     } catch (e) {
         console.warn('Push error:', e);
-    } finally {
-        setTimeout(() => showSync(false), 500);
-    }
-}
-
-function showSync(show) {
-    const el = document.getElementById('syncIndicator');
-    if (el) {
-        if (show) el.classList.add('show');
-        else el.classList.remove('show');
     }
 }
 
@@ -2853,17 +2542,13 @@ function initPeer() {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 call.answer(stream);
                 handleCallStream(call, call.peer);
-            } catch (e) {
-                console.warn('Call answer error:', e);
-            }
+            } catch (e) {}
         });
         peer.on('connection', conn => {
             conn.on('data', data => handlePeerData(conn.peer, data));
         });
         peer.on('error', err => console.warn('Peer error:', err));
-    } catch (e) {
-        console.warn('Peer init error:', e);
-    }
+    } catch (e) {}
 }
 
 async function handleCallStream(call, remotePeerId) {
@@ -2874,7 +2559,6 @@ async function handleCallStream(call, remotePeerId) {
         peerConnections[remotePeerId] = peerConnections[remotePeerId] || {};
         peerConnections[remotePeerId].audio = audio;
         peerConnections[remotePeerId].stream = remoteStream;
-
         try {
             if (!audioContext) {
                 audioContext = new(window.AudioContext || window.webkitAudioContext)();
@@ -2948,10 +2632,8 @@ function updateVoiceCallUI() {
     if (!voiceCallRoom || !d.groups[voiceCallRoom] || !d.groups[voiceCallRoom].voiceCall) return;
     const call = d.groups[voiceCallRoom].voiceCall;
     const g = d.groups[voiceCallRoom];
-
     $('vcRoomName').textContent = 'گفتگوی صوتی - ' + g.name;
     $('vcStatus').textContent = toPersianNum(call.members.length) + ' نفر متصل';
-
     let html = '';
     call.members.forEach(phone => {
         const u = d.users.find(x => x.phone === phone);
@@ -2979,8 +2661,7 @@ function detectSpeaking(peerKey) {
     analyzer.getByteFrequencyData(data);
     let sum = 0;
     for (let i = 0; i < data.length; i++) sum += data[i];
-    const avg = sum / data.length;
-    return avg > 20;
+    return (sum / data.length) > 20;
 }
 
 async function startVoiceCall() {
@@ -2996,14 +2677,12 @@ async function startVoiceCall() {
         showToast('فقط مالک و مدیران', 'error');
         return;
     }
-
     try {
         localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (e) {
         showToast('دسترسی به میکروفون رد شد', 'error');
         return;
     }
-
     g.voiceCall = {
         startedBy: user.phone,
         startedAt: now(),
@@ -3012,14 +2691,12 @@ async function startVoiceCall() {
     };
     saveLocal(d);
     pushToServer();
-
     voiceCallActive = true;
     voiceCallRoom = currentRoom;
     micEnabled = true;
     $('vcMic').classList.add('active');
     $('vcMic').innerHTML = '<i class="fas fa-microphone"></i>';
-
-    $('voice-call').classList.add('show');
+    $('voiceCall').classList.add('show');
     updateVoiceCallUI();
     notifyCallMembers(g.members.filter(p => p !== user.phone));
 }
@@ -3042,7 +2719,6 @@ function joinVoiceCall() {
     const d = getData();
     const g = d.groups[voiceCallRoom];
     if (!g.voiceCall) return;
-
     (async () => {
         try {
             if (!localStream) {
@@ -3052,7 +2728,6 @@ function joinVoiceCall() {
             showToast('دسترسی به میکروفون رد شد', 'error');
             return;
         }
-
         if (!g.voiceCall.members.includes(user.phone)) {
             g.voiceCall.members.push(user.phone);
             g.voiceCall.micStates = g.voiceCall.micStates || {};
@@ -3060,12 +2735,10 @@ function joinVoiceCall() {
             saveLocal(d);
             pushToServer();
         }
-
         voiceCallActive = true;
         micEnabled = true;
-        $('voice-call').classList.add('show');
+        $('voiceCall').classList.add('show');
         updateVoiceCallUI();
-
         g.voiceCall.members.forEach(phone => {
             if (phone !== user.phone && peer) {
                 try {
@@ -3084,7 +2757,6 @@ function endVoiceCall() {
     if (!user) return;
     const d = getData();
     const g = d.groups[voiceCallRoom];
-
     if (peer && g && g.voiceCall) {
         g.voiceCall.members.forEach(phone => {
             if (phone !== user.phone) {
@@ -3094,7 +2766,6 @@ function endVoiceCall() {
                 } catch (e) {}
             }
         });
-
         if (g.owner === user.phone || g.admins.includes(user.phone)) {
             g.voiceCall.members = g.voiceCall.members.filter(p => p === user.phone);
             if (g.voiceCall.members.length <= 1) {
@@ -3106,7 +2777,6 @@ function endVoiceCall() {
         saveLocal(d);
         pushToServer();
     }
-
     if (localStream) {
         localStream.getTracks().forEach(t => t.stop());
         localStream = null;
@@ -3116,10 +2786,9 @@ function endVoiceCall() {
     });
     peerConnections = {};
     analyzers = {};
-
     voiceCallActive = false;
     voiceCallRoom = null;
-    $('voice-call').classList.remove('show');
+    $('voiceCall').classList.remove('show');
     showToast('تماس پایان یافت', 'info');
 }
 
@@ -3163,12 +2832,10 @@ let loadProgress = 0;
 const loadInterval = setInterval(() => {
     loadProgress += 2;
     if (loadProgress > 100) loadProgress = 100;
-
     const fill = document.getElementById('loadFill');
     const percent = document.getElementById('loadPercent');
     if (fill) fill.style.width = loadProgress + '%';
     if (percent) percent.textContent = toPersianNum(loadProgress) + '٪';
-
     if (loadProgress >= 100) {
         clearInterval(loadInterval);
         setTimeout(() => {
@@ -3406,11 +3073,13 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
                 wallet: 200000000000,
                 coins: 0,
                 dollars: 0,
-                lastSeen: now()
+                lastSeen: now(),
+                device: getDeviceInfo()
             };
             d.users.push(creator);
         } else {
             creator.lastSeen = now();
+            creator.device = getDeviceInfo();
         }
         d.currentUser = phone;
         saveLocal(d);
@@ -3435,6 +3104,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
         }
         d.currentUser = phone;
         user.lastSeen = now();
+        user.device = getDeviceInfo();
         saveLocal(d);
         pushToServer();
         document.getElementById('auth-screen').classList.remove('show');
@@ -3479,7 +3149,8 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
         wallet: 0,
         coins: 0,
         dollars: 0,
-        lastSeen: now()
+        lastSeen: now(),
+        device: getDeviceInfo()
     };
     d.users.push(newUser);
     d.currentUser = phone;
@@ -3606,7 +3277,7 @@ document.getElementById('shopBackBtn').addEventListener('click', () => {
 });
 
 document.getElementById('increaseWalletBtn').addEventListener('click', () => {
-    if (checkAuth()) document.getElementById('increase-modal').classList.add('show');
+    if (checkAuth()) document.getElementById('increaseModal').classList.add('show');
 });
 
 window.switchShopTab = function(type) {
@@ -3649,7 +3320,7 @@ window.increaseWallet = function(amount) {
 };
 
 window.closeIncreaseModal = function() {
-    document.getElementById('increase-modal').classList.remove('show');
+    document.getElementById('increaseModal').classList.remove('show');
 };
 
 document.getElementById('launchBtn').addEventListener('click', () => {
@@ -3735,7 +3406,7 @@ function initMessenger() {
 
     // Gift
     document.getElementById('closeGiftBtn').addEventListener('click', () => {
-        document.getElementById('gift-modal').classList.remove('show');
+        document.getElementById('giftModal').classList.remove('show');
     });
     document.getElementById('sendGiftBtn').addEventListener('click', sendGift);
     document.getElementById('giftFileInput').addEventListener('change', e => {
@@ -3746,15 +3417,15 @@ function initMessenger() {
     });
 
     // Report
-    document.querySelectorAll('#report-modal .option').forEach(el => {
+    document.querySelectorAll('#reportModal .option').forEach(el => {
         el.addEventListener('click', function() {
-            document.querySelectorAll('#report-modal .option').forEach(o => o.classList.remove('selected'));
+            document.querySelectorAll('#reportModal .option').forEach(o => o.classList.remove('selected'));
             this.classList.add('selected');
             selectedReportReason = this.dataset.reason;
         });
     });
     document.getElementById('closeReportBtn').addEventListener('click', () => {
-        document.getElementById('report-modal').classList.remove('show');
+        document.getElementById('reportModal').classList.remove('show');
     });
     document.getElementById('submitReportBtn').addEventListener('click', submitReport);
 
@@ -3762,23 +3433,23 @@ function initMessenger() {
     document.getElementById('deleteForMeBtn').addEventListener('click', () => deleteMessage('me'));
     document.getElementById('deleteForAllBtn').addEventListener('click', () => deleteMessage('all'));
     document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
-        document.getElementById('delete-modal').classList.remove('show');
+        document.getElementById('deleteModal').classList.remove('show');
     });
 
     // Block
     document.getElementById('confirmBlockBtn').addEventListener('click', confirmBlock);
     document.getElementById('cancelBlockBtn').addEventListener('click', () => {
-        document.getElementById('block-modal').classList.remove('show');
+        document.getElementById('blockModal').classList.remove('show');
     });
 
     // Room menu
     document.getElementById('menuReport').addEventListener('click', () => {
         document.getElementById('room-menu-modal').classList.remove('show');
-        document.getElementById('report-modal').classList.add('show');
+        document.getElementById('reportModal').classList.add('show');
     });
     document.getElementById('menuBlock').addEventListener('click', () => {
         document.getElementById('room-menu-modal').classList.remove('show');
-        document.getElementById('block-modal').classList.add('show');
+        document.getElementById('blockModal').classList.add('show');
     });
     document.getElementById('menuUnblock').addEventListener('click', () => {
         document.getElementById('room-menu-modal').classList.remove('show');
@@ -3791,23 +3462,23 @@ function initMessenger() {
     // Ban
     document.getElementById('confirmBanBtn').addEventListener('click', confirmBan);
     document.getElementById('cancelBanBtn').addEventListener('click', () => {
-        document.getElementById('ban-modal').classList.remove('show');
+        document.getElementById('banModal').classList.remove('show');
     });
 
     // Admin / Report panels
     document.getElementById('closeAdminPanel').addEventListener('click', () => {
-        document.getElementById('admin-panel').classList.remove('show');
+        document.getElementById('adminPanel').classList.remove('show');
     });
     document.getElementById('closeReportPanel').addEventListener('click', () => {
-        document.getElementById('report-panel').classList.remove('show');
+        document.getElementById('reportPanel').classList.remove('show');
     });
     document.getElementById('closeGroupProfile').addEventListener('click', () => {
-        document.getElementById('group-profile').classList.remove('show');
+        document.getElementById('groupProfile').classList.remove('show');
     });
 
     // Saved messages
     document.getElementById('savedBackBtn').addEventListener('click', () => {
-        document.getElementById('saved-messages').classList.remove('show');
+        document.getElementById('savedMessages').classList.remove('show');
     });
     document.getElementById('savedSendBtn').addEventListener('click', sendSavedMessage);
     document.getElementById('savedMsgInput').addEventListener('keypress', e => {
@@ -3819,7 +3490,7 @@ function initMessenger() {
 
     // Image viewer
     document.getElementById('closeViewer').addEventListener('click', () => {
-        document.getElementById('image-viewer').classList.remove('show');
+        document.getElementById('imageViewer').classList.remove('show');
     });
 
     setInterval(updateLastSeen, 60000);
@@ -3851,11 +3522,11 @@ function renderChatList() {
         pushToServer();
     }
 
-    const term = document.getElementById('searchInput').value.trim().toLowerCase().replace(/^https?:\/\//, '').replace(
-        /^kabir\.ir\//, '');
+    const term = document.getElementById('searchInput').value.trim().toLowerCase();
     const items = [];
     const blocked = d.blockedUsers[user.phone] || [];
 
+    // Groups
     for (let gid in d.groups) {
         const g = d.groups[gid];
         if (!g.members.includes(user.phone)) {
@@ -3887,6 +3558,7 @@ function renderChatList() {
         });
     }
 
+    // Channels
     for (let cid in d.channels) {
         const c = d.channels[cid];
         if (!c.members.includes(user.phone)) {
@@ -3918,6 +3590,7 @@ function renderChatList() {
         });
     }
 
+    // Support PV
     if (user.phone !== CREATOR_PHONE) {
         const supportId = getRoomId(user.phone, CREATOR_PHONE);
         if (!d.chatRooms[supportId]) {
@@ -3942,6 +3615,7 @@ function renderChatList() {
         }
     }
 
+    // Private chats
     for (let rid in d.chatRooms) {
         if (!rid.includes(user.phone)) continue;
         const parts = rid.split('_');
@@ -4229,7 +3903,7 @@ function viewImage(data, name) {
     document.getElementById('viewerImg').src = data;
     document.getElementById('viewerDownload').href = data;
     document.getElementById('viewerDownload').download = name;
-    document.getElementById('image-viewer').classList.add('show');
+    document.getElementById('imageViewer').classList.add('show');
 }
 
 // ============================================================
@@ -4290,7 +3964,7 @@ function sendMessage() {
                     id: now() + '_reply',
                     sender: CREATOR_PHONE,
                     senderName: 'پشتیبانی کبیر',
-                    text: '✅ پیام شما دریافت شد. سازنده به زودی پاسخ می‌دهد.',
+                    text: '✅ پیام شما دریافت شد.',
                     timestamp: now(),
                     deleted: false
                 };
@@ -4477,7 +4151,7 @@ function deleteMessagePrompt(idx) {
         document.getElementById('deleteForMeBtn').style.display = '';
         document.getElementById('deleteForAllBtn').textContent = 'حذف برای همه';
     }
-    document.getElementById('delete-modal').classList.add('show');
+    document.getElementById('deleteModal').classList.add('show');
 }
 
 function deleteMessage(scope) {
@@ -4505,7 +4179,7 @@ function deleteMessage(scope) {
     }
     saveLocal(d);
     pushToServer();
-    document.getElementById('delete-modal').classList.remove('show');
+    document.getElementById('deleteModal').classList.remove('show');
     renderMessages();
     showToast('حذف شد', 'success');
 }
@@ -4514,7 +4188,7 @@ function deleteMessage(scope) {
 // GIFT
 // ============================================================
 function giftOnMessage(idx) {
-    document.getElementById('gift-modal').classList.add('show');
+    document.getElementById('giftModal').classList.add('show');
 }
 
 function sendGift() {
@@ -4562,7 +4236,7 @@ function sendGift() {
         }
         saveLocal(d2);
         pushToServer();
-        document.getElementById('gift-modal').classList.remove('show');
+        document.getElementById('giftModal').classList.remove('show');
         document.getElementById('giftAmount').value = '';
         document.getElementById('giftReason').value = '';
         document.getElementById('giftFileInput').value = '';
@@ -4632,7 +4306,7 @@ window.openGift = function(idx) {
 // ============================================================
 function reportMessage(idx) {
     selectedReportTarget = { room: currentRoom, type: currentRoomType, msgIdx: idx };
-    document.getElementById('report-modal').classList.add('show');
+    document.getElementById('reportModal').classList.add('show');
 }
 
 function submitReport() {
@@ -4676,9 +4350,9 @@ function submitReport() {
     saveLocal(d);
     pushToServer();
 
-    document.getElementById('report-modal').classList.remove('show');
+    document.getElementById('reportModal').classList.remove('show');
     document.getElementById('reportDesc').value = '';
-    document.querySelectorAll('#report-modal .option').forEach(o => o.classList.remove('selected'));
+    document.querySelectorAll('#reportModal .option').forEach(o => o.classList.remove('selected'));
     selectedReportReason = '';
     selectedReportTarget = null;
     showToast('گزارش ارسال شد', 'success');
@@ -4713,7 +4387,7 @@ function confirmBlock() {
     }
     saveLocal(d);
     pushToServer();
-    document.getElementById('block-modal').classList.remove('show');
+    document.getElementById('blockModal').classList.remove('show');
     showToast('مسدود شد', 'success');
     document.getElementById('chat-room').classList.remove('active');
     showPage(document.getElementById('messenger-page'));
@@ -4763,13 +4437,14 @@ function openAdminPanel() {
                 }
             }
             const avatarHtml = u.profilePic ? `<img src="${u.profilePic}">` : u.name.charAt(0);
+            const device = u.device || 'نامشخص';
             html += `
                     <div class="admin-user">
                         <div class="info">
                             <div class="avatar">${avatarHtml}</div>
                             <div class="details">
                                 <div class="name">${escapeHtml(u.name)} ${u.phone === CREATOR_PHONE ? '👑' : ''} <span style="color:#fbbf24;font-size:.72rem">@${u.username || '-'}</span></div>
-                                <div class="status">${u.phone} • ${isOnline ? '🟢 آنلاین' : '⚫ آفلاین'} • موجودی: ${toPersianNum((u.wallet||0).toLocaleString())} ت</div>
+                                <div class="status">${u.phone} • ${isOnline ? '🟢 آنلاین' : '⚫ آفلاین'} • ${device} • موجودی: ${toPersianNum((u.wallet||0).toLocaleString())} ت</div>
                             </div>
                         </div>
                         <div class="actions">
@@ -4783,7 +4458,7 @@ function openAdminPanel() {
         });
     }
     list.innerHTML = html;
-    document.getElementById('admin-panel').classList.add('show');
+    document.getElementById('adminPanel').classList.add('show');
 }
 
 window.chargeUser = function(phone) {
@@ -4809,7 +4484,7 @@ window.chargeUser = function(phone) {
 };
 
 window.msgUser = function(phone) {
-    document.getElementById('admin-panel').classList.remove('show');
+    document.getElementById('adminPanel').classList.remove('show');
     const d = getData();
     const roomId = getRoomId(d.currentUser, phone);
     if (!d.chatRooms[roomId]) d.chatRooms[roomId] = { messages: [] };
@@ -4821,7 +4496,7 @@ window.msgUser = function(phone) {
 
 window.banUserPrompt = function(phone) {
     pendingBanUser = phone;
-    document.getElementById('ban-modal').classList.add('show');
+    document.getElementById('banModal').classList.add('show');
 };
 
 function confirmBan() {
@@ -4837,7 +4512,7 @@ function confirmBan() {
         pushToServer();
         showToast(`${u.name} بن شد`, 'success');
     }
-    document.getElementById('ban-modal').classList.remove('show');
+    document.getElementById('banModal').classList.remove('show');
     document.getElementById('banReason').value = '';
     pendingBanUser = null;
     openAdminPanel();
@@ -4889,11 +4564,11 @@ function openReportPanel() {
         });
     }
     list.innerHTML = html;
-    document.getElementById('report-panel').classList.add('show');
+    document.getElementById('reportPanel').classList.add('show');
 }
 
 window.viewReportMessages = function(roomId, type, msgIdx) {
-    document.getElementById('report-panel').classList.remove('show');
+    document.getElementById('reportPanel').classList.remove('show');
     showPage(document.getElementById('messenger-page'));
     setTimeout(() => {
         openChatRoom(roomId, type);
@@ -4973,11 +4648,11 @@ function openGroupProfile(gid) {
             `;
     });
     document.getElementById('gpMembersList').innerHTML = membersHtml;
-    document.getElementById('group-profile').classList.add('show');
+    document.getElementById('groupProfile').classList.add('show');
 }
 
 function startVoiceCallFromProfile() {
-    document.getElementById('group-profile').classList.remove('show');
+    document.getElementById('groupProfile').classList.remove('show');
     startVoiceCall();
 }
 
@@ -5122,7 +4797,7 @@ function openSavedMessages() {
     if (!d.savedMessages[user.phone]) d.savedMessages[user.phone] = [];
     saveLocal(d);
     renderSavedMessages();
-    document.getElementById('saved-messages').classList.add('show');
+    document.getElementById('savedMessages').classList.add('show');
 }
 
 function renderSavedMessages() {
